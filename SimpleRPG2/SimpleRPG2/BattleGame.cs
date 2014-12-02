@@ -11,6 +11,8 @@ namespace SimpleRPG2
        // public Tile[,] board;
         public Board board;
         public List<GameCharacter> characterList;
+        public int currentCharacter = 0;
+
         public BattleLog battleLog;
 
         public Random r;
@@ -85,13 +87,35 @@ namespace SimpleRPG2
             {
                 Console.WriteLine(board.ToString());
                 Console.WriteLine(battleLog.ToString());
+                DisplayCharList();
                 DisplayMainMenu();
             }
         }
 
+        //display the list of characters, indicating active
+        private void DisplayCharList()
+        {
+            string txt = "";
+            int counter = 0;
+            foreach(var c in characterList)
+            {
+                if(counter == currentCharacter)
+                {
+                    txt += string.Format(" ->{0} ({1})<- ", c.name, c.displayChar);
+                }
+                else
+                {
+                    txt += string.Format(" {0} ({1}) ", c.name, c.displayChar);
+                }
+                counter++;
+            }
+
+            Console.WriteLine(txt);
+        }
+
         private void DisplayMainMenu()
         {
-            List<string> menu = new List<string>(){"1. View","2. Move","3. Attack"};
+            List<string> menu = new List<string>(){"1. View","2. Move","3. Attack", "4. Skip"};
             int input = CoreHelper.displayMenuGetInt(menu);
             switch(input)
             {
@@ -102,6 +126,9 @@ namespace SimpleRPG2
                     
                     break;
                 case 3:
+                    break;
+                case 4:
+                    PlayerSkip();
                     break;
                 default: break;
             }
@@ -130,8 +157,6 @@ namespace SimpleRPG2
         {
 
         }
-
-         
 
         private BattleStatusType getBattleStatus()
         {
@@ -168,6 +193,18 @@ namespace SimpleRPG2
                 return BattleStatusType.Running;
             }
           
+        }
+
+        private void PlayerSkip()
+        {
+            battleLog.AddEntry(characterList[currentCharacter].name + " skipped turn.");
+
+            currentCharacter++;
+            if(currentCharacter >= characterList.Count)
+            {
+                currentCharacter = 0;
+            }
+
         }
 
         private void PlayerMove(GameCharacter player, int x, int y)
