@@ -17,6 +17,14 @@ namespace SimpleRPG2
 
         public Random r;
 
+        public GameCharacter ActiveCharacter
+        {
+            get
+            {
+                return characterList[currentCharacter];
+            }
+        }
+
         public BattleGame()
         {
             r = new Random();
@@ -134,9 +142,10 @@ namespace SimpleRPG2
                     DisplayViewMenu();
                     break;
                 case 2:
-                    
+                    DisplayMoveMenu();
                     break;
                 case 3:
+                    DisplayAttackMenu();
                     break;
                 case 4:
                     PlayerSkip();
@@ -158,6 +167,8 @@ namespace SimpleRPG2
             }
 
             int input = CoreHelper.displayMenuGetInt(displayCharList);
+            
+            //Display the Character
             Console.Write(characterList[input - 1].ToString());
             Console.Write(">");
             Console.ReadLine();
@@ -165,6 +176,43 @@ namespace SimpleRPG2
         }
 
         private void DisplayMoveMenu()
+        {
+            List<string> menu = new List<string>() { "1. North","2.South","3.West","4.East","5.Back" };
+            int input = CoreHelper.displayMenuGetInt(menu);
+            var curTile = board.getTileFromLocation(ActiveCharacter.x,ActiveCharacter.y);
+            DirectionType dir;
+            switch(input)
+            {
+                case 1:
+                    dir = DirectionType.North;
+                    break;
+                case 2:
+                    dir = DirectionType.South;
+                    break;
+                case 3:
+                    dir = DirectionType.West;
+                     break;
+                case 4:
+                     dir = DirectionType.East;
+                     break;
+                case 5:
+                     return;
+                default:
+                     return;
+            }
+
+            if (board.MoveCharacter(ActiveCharacter, board.getAdjascentTile(curTile, dir)))
+            {
+                battleLog.AddEntry(string.Format("{0} moved {1}.", ActiveCharacter.name, dir.ToString()));
+            }
+            else
+            {
+                battleLog.AddEntry(string.Format("{0} was unable to move {1}.", ActiveCharacter.name, dir.ToString()));
+            }
+        }
+
+        
+        private void DisplayAttackMenu()
         {
 
         }

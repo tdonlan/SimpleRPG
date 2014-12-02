@@ -34,4 +34,12 @@ namespace SimpleRPG2
         Running,
        
     }
+
+    public enum DirectionType
+    {
+        North,
+        South,
+        West,
+        East,
+    }
 }

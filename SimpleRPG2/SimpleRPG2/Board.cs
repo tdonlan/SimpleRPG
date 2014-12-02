@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace SimpleRPG2
 {
+    public class Point
+    {
+        public int x {get;set;}
+        public int y {get;set;}
+    }
+
+
     public class Board
     {
         public Tile[,] board;
@@ -32,16 +39,59 @@ namespace SimpleRPG2
             game.battleLog.AddEntry("Board Initialized");
         }
 
+        public Tile getAdjascentTile(Tile t, DirectionType dir)
+        {
+            Tile retval = null;
+            switch(dir)
+            {
+                case DirectionType.North:
+                    retval = getTileFromLocation(t.x, t.y - 1);
+                    break;
+                case DirectionType.South:
+                    retval = getTileFromLocation(t.x, t.y + 1);
+                    break; 
+                case DirectionType.West:
+                    retval = getTileFromLocation(t.x - 1, t.y);
+                    break;
+                case DirectionType.East:
+
+                    retval = getTileFromLocation(t.x + 1, t.y);
+                    break;
+                default: break;
+            }
+            return retval;
+        }
+
+
+        public Tile getTileFromLocation(int x, int y)
+        {
+            try
+            {
+                return board[x, y];
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Point getPointFromTile(Tile t)
+        {
+            return new Point() { x = t.x, y = t.y };
+        }
+
         public bool MoveCharacter(GameCharacter gc, Tile Destination)
         {
             bool retval = false;
-
-            if(Destination.empty)
+            if (Destination != null)
             {
-                EmptyTile(board[gc.x,gc.y]);
-                FillTile(gc,Destination);
+                if (Destination.empty)
+                {
+                    EmptyTile(board[gc.x, gc.y]);
+                    FillTile(gc, Destination);
 
-                retval = true;
+                    retval = true;
+                }
             }
 
             return retval;
