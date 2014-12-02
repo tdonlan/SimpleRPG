@@ -20,16 +20,12 @@ namespace SimpleRPG2
                 defender.hp -= dmg;
                 log.AddEntry(string.Format("{0} hit {1} for {2} damage.", attacker.name, defender.name, dmg));
             }
+            else
+            {
+                log.AddEntry(string.Format("{0} missed {1}.", attacker.name, defender.name));
+            }
         }
 
-        public static bool Move(GameCharacter attacker, Tile destination)
-        {
-            //implement A* to find path
-            //or just make players move single space at time?  (still need A* for AI)
-
-            return false;
-
-
-        }
+        
     }
 }

@@ -42,4 +42,19 @@ namespace SimpleRPG2
         West,
         East,
     }
+
+    //patterns of tiles affected (by attacks, spells, etc)
+    public enum TilePatternType
+    {
+        Single,
+        FourAdj,
+        EightAdj,
+        NineSquare,
+        ThreeLineVert,
+        ThreeLineHor,
+
+        
+    }
+
 }
+

@@ -25,6 +25,14 @@ namespace SimpleRPG2
             }
         }
 
+        public Tile ActiveTile
+        {
+            get
+            {
+                return board.getTileFromLocation(ActiveCharacter.x, ActiveCharacter.y);
+            }
+        }
+
         public BattleGame()
         {
             r = new Random();
@@ -215,6 +223,45 @@ namespace SimpleRPG2
         private void DisplayAttackMenu()
         {
 
+            //list enemies in range
+            var attackCharList = getCharactersFromTileList(board.getTileListFromPattern(ActiveTile, TilePatternType.FourAdj));
+
+            List<string> menu = new List<string>();
+            int counter =1;
+            foreach (var c in attackCharList)
+            {
+                menu.Add(string.Format("{0}. {1} ({2})", counter, c.name, c.displayChar));
+                    counter++;
+            }
+
+            menu.Add(string.Format("{0}. Back", counter));
+
+            int input = CoreHelper.displayMenuGetInt(menu);
+           
+                if(input != counter)
+                {
+                    CombatHelper.Attack(ActiveCharacter, attackCharList[input - 1], battleLog, r);
+                }
+            
+
+        }
+
+        //return the list of chars at this tile list
+        private List<GameCharacter> getCharactersFromTileList(List<Tile> tileList)
+        {
+            List<GameCharacter> retvalList = new List<GameCharacter>();
+            foreach(var t in tileList)
+            {
+                foreach(var c in characterList)
+                {
+                    if(c.x == t.x && c.y == t.y)
+                    {
+                        retvalList.Add(c);
+                    }
+                }
+            }
+
+            return retvalList;
         }
 
         private BattleStatusType getBattleStatus()

@@ -10,6 +10,17 @@ namespace SimpleRPG2
     {
         public int x {get;set;}
         public int y {get;set;}
+
+        public Point()
+        { }
+
+        public Point(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+
     }
 
 
@@ -59,6 +70,12 @@ namespace SimpleRPG2
                 default: break;
             }
             return retval;
+        }
+
+        //return the tile that is a distance away (used to get tile patterns)
+        public Tile getNearTile(Tile t, Point diff)
+        {
+            return getTileFromLocation(t.x + diff.x, t.y + diff.y);
         }
 
         public Tile getTileFromLocation(int x, int y)
@@ -134,6 +151,37 @@ namespace SimpleRPG2
                 }
             }
             return freeTileList;
+        }
+
+
+
+        public List<Tile> getTileListFromPattern(Tile origin, TilePatternType pattern)
+        {
+            List<Tile> retvalList = new List<Tile>();
+
+            switch(pattern)
+            {
+                case TilePatternType.FourAdj:
+                    return getTileListFromPointList(origin, PatternFactory.getFourAdj());
+                default:
+                    break;
+            }
+
+            return retvalList;
+        }
+
+        private List<Tile> getTileListFromPointList(Tile origin, List<Point> pointList)
+        {
+            List<Tile> retvalList = new List<Tile>();
+            foreach(var p in pointList)
+            {
+                var t = getNearTile(origin, p);
+                if(t != null)
+                {
+                    retvalList.Add(t);
+                }
+            }
+            return retvalList;
         }
 
 
