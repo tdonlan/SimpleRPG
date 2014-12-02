@@ -29,22 +29,7 @@ namespace SimpleRPG2
             
         }
 
-        /*
-        private void InitBoard(int size)
-        {
-            board = new Tile[size, size];
-
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    board[i, j] = new Tile(i,j);
-                }
-            }
-
-            battleLog.AddEntry("Board Initialized");
-        }
-        */
+     
         private void InitChars()
         {
             characterList = new List<GameCharacter>();
@@ -69,6 +54,16 @@ namespace SimpleRPG2
             //randomize attack order 
         }
 
+        //Increment Initiative
+        private void NextTurn()
+        {
+            currentCharacter++;
+            if(currentCharacter >= characterList.Count)
+            {
+                currentCharacter = 0;
+            }
+        }
+
         //currently, randomize
         private void placeCharactersInBoard()
         {
@@ -85,10 +80,26 @@ namespace SimpleRPG2
             BattleStatusType battleStatus = getBattleStatus();
             while(battleStatus == BattleStatusType.Running)
             {
+                Console.Clear();
                 Console.WriteLine(board.ToString());
                 Console.WriteLine(battleLog.ToString());
                 DisplayCharList();
-                DisplayMainMenu();
+                if (characterList[currentCharacter].hp > 0)
+                {
+                    if (characterList[currentCharacter].type == CharacterType.Player)
+                    {
+                        DisplayMainMenu();
+                    }
+                    else
+                    {
+                        RunEnemyTurn();
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                }
+                else
+                {
+                    NextTurn();
+                }
             }
         }
 
@@ -199,11 +210,7 @@ namespace SimpleRPG2
         {
             battleLog.AddEntry(characterList[currentCharacter].name + " skipped turn.");
 
-            currentCharacter++;
-            if(currentCharacter >= characterList.Count)
-            {
-                currentCharacter = 0;
-            }
+            NextTurn();
 
         }
 
@@ -215,6 +222,21 @@ namespace SimpleRPG2
         private void PlayerAttack(GameCharacter player, GameCharacter enemy)
         {
 
+        }
+
+        //enemy AI
+        private void RunEnemyTurn()
+        {
+
+            EnemySkip();
+               
+        }
+
+        private void EnemySkip()
+        {
+            battleLog.AddEntry(string.Format("{0} skipped its turn.",characterList[currentCharacter].name));
+
+            NextTurn();
         }
 
         private void EnemyMove(GameCharacter enemy, int x, int y)

@@ -33,7 +33,7 @@ namespace SimpleRPG2
             }
             for(int i=index;i<log.Count;i++)
             {
-                retval += log[i] + "\n";
+                retval += string.Format("{0}. {1}\n", i, log[i]);
             }
             return retval;
         }
