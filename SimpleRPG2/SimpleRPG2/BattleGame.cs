@@ -8,23 +8,26 @@ namespace SimpleRPG2
 {
     public class BattleGame
     {
-        public Tile[,] board;
+       // public Tile[,] board;
+        public Board board;
         public List<GameCharacter> characterList;
         public BattleLog battleLog;
 
-        Random r;
+        public Random r;
 
         public BattleGame()
         {
             r = new Random();
             battleLog = new BattleLog();
-            InitBoard(20);
+            board = new Board(this);
+           
             InitChars();
 
             StartBattle();
             
         }
 
+        /*
         private void InitBoard(int size)
         {
             board = new Tile[size, size];
@@ -39,7 +42,7 @@ namespace SimpleRPG2
 
             battleLog.AddEntry("Board Initialized");
         }
-
+        */
         private void InitChars()
         {
             characterList = new List<GameCharacter>();
@@ -69,46 +72,18 @@ namespace SimpleRPG2
         {
             foreach(var gc in characterList)
             {
-                var freeTile = getFreeTile();
-                gc.x = freeTile.x;
-                gc.y = freeTile.y;
-                board[freeTile.x, freeTile.y].empty = false;
-                board[freeTile.x, freeTile.y].TileChar = gc.displayChar;
+                var freeTile = board.getFreeTile();
+                board.FillTile(gc, freeTile);
             }
         }
 
-        //return a random tile that is empty
-        private Tile getFreeTile()
-        {
-            List<Tile> freeTileList = getFreeTileList();
-
-            return  freeTileList.ElementAt(r.Next(freeTileList.Count));
-
-        }
-
-        private List<Tile> getFreeTileList()
-        {
-            List<Tile> freeTileList = new List<Tile>();
-            for (int i = 0; i < board.GetLength(0); i++)
-            {
-                for (int j = 0; j < board.GetLength(1); j++)
-                {
-                   if(board[i,j].empty)
-                   {
-                       freeTileList.Add(board[i, j]);
-                   }
-                }
-            }
-            return freeTileList;
-        }
-        
 
         private void RunBattle()
         {
             BattleStatusType battleStatus = getBattleStatus();
             while(battleStatus == BattleStatusType.Running)
             {
-                Console.WriteLine(this.ToString());
+                Console.WriteLine(board.ToString());
                 Console.WriteLine(battleLog.ToString());
                 DisplayMainMenu();
             }
@@ -124,6 +99,7 @@ namespace SimpleRPG2
                     DisplayViewMenu();
                     break;
                 case 2:
+                    
                     break;
                 case 3:
                     break;
@@ -148,6 +124,11 @@ namespace SimpleRPG2
             Console.Write(">");
             Console.ReadLine();
             return;
+        }
+
+        private void DisplayMoveMenu()
+        {
+
         }
 
          
@@ -220,34 +201,6 @@ namespace SimpleRPG2
 
         }
 
-
-        
-
-        //print game board
-        public override string ToString()
-        {
-            string retval = "Simple RPG Board: \n";
-
-            int width = board.GetLength(0);
-            List<char> letterList = CoreHelper.getLetterList();
-            retval += "    ";
-            for (int i = 0; i < width;i++ )
-            {
-                retval += letterList[i] + " ";
-            }
-            retval += "\n";
-            
-                for (int i = 0; i < board.GetLength(0); i++)
-                {
-                    retval += CoreHelper.getPaddedNum(i) + "| ";
-                    for (int j = 0; j < board.GetLength(1); j++)
-                    {
-                        retval += board[i, j] + " ";
-                    }
-                    retval += "\n";
-                }
-            return retval;
-        }
 
     }
 }

@@ -59,5 +59,30 @@ namespace SimpleRPG2
             }
             return retval;
         }
+
+        //inclue a regex or a list of accepted values?
+        public static string displayMenuGetStr(List<string> menu)
+        {
+            bool valid = false;
+            string input = "";
+            while (!valid)
+            {
+                foreach (var s in menu)
+                {
+                    Console.Write(s + "\n");
+                }
+                Console.Write(">");
+                input = Console.ReadLine();
+                
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    Console.WriteLine("Invalid Input");
+                }
+                {
+                    valid = true;
+                }
+            }
+            return input;
+        }
     }
 }
