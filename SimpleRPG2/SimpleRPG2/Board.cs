@@ -44,24 +44,22 @@ namespace SimpleRPG2
             Tile retval = null;
             switch(dir)
             {
-                case DirectionType.North:
+                case DirectionType.West:
                     retval = getTileFromLocation(t.x, t.y - 1);
                     break;
-                case DirectionType.South:
+                case DirectionType.East:
                     retval = getTileFromLocation(t.x, t.y + 1);
                     break; 
-                case DirectionType.West:
+                case DirectionType.North:
                     retval = getTileFromLocation(t.x - 1, t.y);
                     break;
-                case DirectionType.East:
-
+                case DirectionType.South:
                     retval = getTileFromLocation(t.x + 1, t.y);
                     break;
                 default: break;
             }
             return retval;
         }
-
 
         public Tile getTileFromLocation(int x, int y)
         {
