@@ -11,6 +11,9 @@ namespace SimpleRPG2
         static void Main(string[] args)
         {
             BattleGame bg = new BattleGame();
+
+
+            //Test.testMenu();
             
         }
     }

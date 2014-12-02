@@ -25,5 +25,14 @@ namespace SimpleRPG2
 
         public GameCharacter() { }
 
+        public override string ToString()
+        {
+            string retval = name + "\n";
+            retval += string.Format("AC: {0} HP: {1}/{2} Atk: {3}\n", ac, hp, totalHP, attack);
+            retval += weapon.ToString() + "\n";
+
+            return retval;
+        }
+
     }
 }

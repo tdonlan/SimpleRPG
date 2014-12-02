@@ -110,10 +110,47 @@ namespace SimpleRPG2
             {
                 Console.WriteLine(this.ToString());
                 Console.WriteLine(battleLog.ToString());
-                Console.Write(">");
-                Console.ReadLine(); 
+                DisplayMainMenu();
             }
         }
+
+        private void DisplayMainMenu()
+        {
+            List<string> menu = new List<string>(){"1. View","2. Move","3. Attack"};
+            int input = CoreHelper.displayMenuGetInt(menu);
+            switch(input)
+            {
+                case 1:
+                    DisplayViewMenu();
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                default: break;
+            }
+            return;
+        }
+
+        private void DisplayViewMenu()
+        {
+            //get list of characters
+            List<string> displayCharList = new List<string>();
+            int count = 1;
+            foreach(var c in characterList)
+            {
+                displayCharList.Add(string.Format("{0}.{1} ({2})", count, c.name, c.displayChar));
+                count++;
+            }
+
+            int input = CoreHelper.displayMenuGetInt(displayCharList);
+            Console.Write(characterList[input - 1].ToString());
+            Console.Write(">");
+            Console.ReadLine();
+            return;
+        }
+
+         
 
         private BattleStatusType getBattleStatus()
         {

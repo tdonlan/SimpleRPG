@@ -19,6 +19,11 @@ namespace SimpleRPG2
         public int damage { get; set; }
         public int actionPoints { get; set; }
 
+        public override string ToString()
+        {
+            return string.Format("{0} dmg: {1}", name, damage);
+        }
+
     }
 
     public class Armor : Item

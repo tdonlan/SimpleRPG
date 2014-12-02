@@ -11,12 +11,16 @@ namespace SimpleRPG2
         public static GameCharacter getEnemy(Random r)
         {
             GameCharacter retval = new GameCharacter() {name="Goblin",displayChar='G',type=CharacterType.Enemy, ac = 5, attack = 5, totalHP = 10, hp = 10 };
+            retval.weapon = ItemFactory.getWeapon(r);
             return retval;
         }
 
         public static GameCharacter getPlayerCharacter(Random r)
         {
-            return new GameCharacter() {name="Warrior",displayChar='@',type=CharacterType.Player, ac = 10, attack = 5, totalHP = 10, hp = 10 };
+            GameCharacter retval =  new GameCharacter() {name="Warrior",displayChar='@',type=CharacterType.Player, ac = 10, attack = 5, totalHP = 10, hp = 10 };
+            retval.weapon = ItemFactory.getWeapon(r);
+                
+            return retval;
         }
 
     }
