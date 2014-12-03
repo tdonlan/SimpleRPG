@@ -37,9 +37,6 @@ namespace SimpleRPG2
         {
             r = new Random();
             battleLog = new BattleLog();
-            board = new Board(this);
-           
-           
 
             StartBattle();
             
@@ -58,6 +55,8 @@ namespace SimpleRPG2
         private void StartBattle()
         {
             battleLog.AddEntry("Starting Battle");
+
+            board = new Board(this);
             InitChars();
             SetBattleInitiative();
             placeCharactersInBoard();
@@ -390,13 +389,16 @@ namespace SimpleRPG2
         private void LoseBattle()
         {
             battleLog.AddEntry("Battle Lost");
+            Console.WriteLine("You Lose! Press Enter to continue.\n");
             Console.ReadLine();
             StartBattle();
         }
         
         private void WinBattle()
         {
+
             battleLog.AddEntry("Battle Won");
+            Console.WriteLine("You Win! Press Enter to continue.\n");
             Console.ReadLine();
             StartBattle();
 
