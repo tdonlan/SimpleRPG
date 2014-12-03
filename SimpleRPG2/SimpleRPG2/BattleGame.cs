@@ -39,7 +39,7 @@ namespace SimpleRPG2
             battleLog = new BattleLog();
             board = new Board(this);
            
-            InitChars();
+           
 
             StartBattle();
             
@@ -58,7 +58,7 @@ namespace SimpleRPG2
         private void StartBattle()
         {
             battleLog.AddEntry("Starting Battle");
-
+            InitChars();
             SetBattleInitiative();
             placeCharactersInBoard();
             RunBattle();
@@ -117,7 +117,18 @@ namespace SimpleRPG2
                 {
                     NextTurn();
                 }
+
+                battleStatus = getBattleStatus();
             }
+            if(battleStatus == BattleStatusType.PlayersDead)
+            {
+                LoseBattle();
+            }
+            else if(battleStatus == BattleStatusType.EnemiesDead)
+            {
+                WinBattle();
+            }
+           
         }
 
         //display the list of characters, indicating active
@@ -378,12 +389,16 @@ namespace SimpleRPG2
 
         private void LoseBattle()
         {
-
+            battleLog.AddEntry("Battle Lost");
+            Console.ReadLine();
+            StartBattle();
         }
         
         private void WinBattle()
         {
-
+            battleLog.AddEntry("Battle Won");
+            Console.ReadLine();
+            StartBattle();
 
         }
 
