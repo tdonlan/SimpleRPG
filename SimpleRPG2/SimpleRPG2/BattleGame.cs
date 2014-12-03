@@ -8,7 +8,7 @@ namespace SimpleRPG2
 {
     public class BattleGame
     {
-       // public Tile[,] board;
+      
         public Board board;
         public List<GameCharacter> characterList;
         public int currentCharacter = 0;
@@ -100,9 +100,10 @@ namespace SimpleRPG2
                 Console.WriteLine(board.ToString());
                 Console.WriteLine(battleLog.ToString());
                 DisplayCharList();
-                if (characterList[currentCharacter].hp > 0)
+
+                if (ActiveCharacter.hp > 0)
                 {
-                    if (characterList[currentCharacter].type == CharacterType.Player)
+                    if (ActiveCharacter.type == CharacterType.Player)
                     {
                         DisplayMainMenu();
                     }
@@ -142,7 +143,7 @@ namespace SimpleRPG2
 
         private void DisplayMainMenu()
         {
-            List<string> menu = new List<string>(){"1. View","2. Move","3. Attack", "4. Skip"};
+            List<string> menu = new List<string>(){"1. View","2. Move", "3. Move To","4. Attack", "5. Skip", "6. Refresh"};
             int input = CoreHelper.displayMenuGetInt(menu);
             switch(input)
             {
@@ -153,11 +154,16 @@ namespace SimpleRPG2
                     DisplayMoveMenu();
                     break;
                 case 3:
-                    DisplayAttackMenu();
+                    DisplayMoveToMenu();
                     break;
                 case 4:
+                    DisplayAttackMenu();
+                    break;
+                case 5:
                     PlayerSkip();
                     break;
+                case 6:
+                    return;
                 default: break;
             }
             return;
@@ -216,6 +222,32 @@ namespace SimpleRPG2
             else
             {
                 battleLog.AddEntry(string.Format("{0} was unable to move {1}.", ActiveCharacter.name, dir.ToString()));
+            }
+        }
+
+        private void DisplayMoveToMenu()
+        {
+            List<string> menu = new List<string>() { "Enter destination ex: 'A,1'" };
+            bool valid = false;
+            while (!valid)
+            {
+                string input = CoreHelper.displayMenuGetStr(menu);
+
+                Point p = CoreHelper.parseStringPoint(input);
+                if(p != null)
+                {
+                    if(board.MoveCharacter(ActiveCharacter, board.getTileFromLocation(p.x,p.y)))
+                    { 
+                        valid = true;
+                        battleLog.AddEntry(string.Format("{0} moved to {1},{2}", ActiveCharacter.name, p.x, p.y));
+                    }
+                    else
+                    {
+                        battleLog.AddEntry(string.Format("{0} unable to move to {1},{2}", ActiveCharacter.name, p.x, p.y));
+                    }
+
+                }
+
             }
         }
 

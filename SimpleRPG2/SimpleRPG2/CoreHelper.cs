@@ -84,5 +84,28 @@ namespace SimpleRPG2
             }
             return input;
         }
+
+        public static Point parseStringPoint(string pt)
+        {
+            Point retval = null;
+            string[] ptSplit = pt.Split(',');
+            if (ptSplit.Length == 2)
+            {
+                try
+                {
+                    char ptChar = (char)ptSplit[0].ToUpper()[0];
+                    int y = getLetterList().FindIndex(a => a == ptChar);
+                    int x = Int32.Parse(ptSplit[1]);
+
+                    retval = new Point(x, y);
+                }
+                catch
+                {
+
+                }
+
+            }
+            return retval;
+        }
     }
 }
