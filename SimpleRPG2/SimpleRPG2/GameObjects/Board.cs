@@ -95,6 +95,12 @@ namespace SimpleRPG2
             return new Point() { x = t.x, y = t.y };
         }
 
+        //Need to use A* to get this distance
+        public int getTileDistance(Tile a, Tile b)
+        {
+            return Math.Abs(a.x - b.x) + Math.Abs(a.y-b.y);
+        }
+
         public bool MoveCharacter(GameCharacter gc, Tile Destination)
         {
             bool retval = false;
@@ -102,10 +108,15 @@ namespace SimpleRPG2
             {
                 if (Destination.empty)
                 {
-                    EmptyTile(board[gc.x, gc.y]);
-                    FillTile(gc, Destination);
+                    //Use Actionpoints to Move
+                    Tile curTile = getTileFromLocation(gc.x, gc.y);
+                    if(gc.SpendAP(getTileDistance(curTile,Destination)))
+                    { 
+                        EmptyTile(board[gc.x, gc.y]);
+                        FillTile(gc, Destination);
 
-                    retval = true;
+                        retval = true;
+                    }
                 }
             }
 

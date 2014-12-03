@@ -18,6 +18,8 @@ namespace SimpleRPG2
         public int totalHP { get; set; }
         public int hp { get; set; }
         public int attack { get; set; }
+        public int ap { get; set; }
+        public int totalAP { get; set; }
 
         public List<Item> inventory { get; set; }
         public Weapon weapon { get; set; }
@@ -28,11 +30,27 @@ namespace SimpleRPG2
         public override string ToString()
         {
             string retval = name + "\n";
-            retval += string.Format("AC: {0} HP: {1}/{2} Atk: {3}\n", ac, hp, totalHP, attack);
+            retval += string.Format("AC: {0} HP: {1}/{2} Atk: {3} AP: {4}/{5}\n", ac, hp, totalHP, attack, ap,totalAP);
             retval += weapon.ToString() + "\n";
 
             return retval;
         }
+
+        public bool SpendAP(int ap)
+        {
+            if(this.ap >= ap)
+            {
+                this.ap -= ap;
+                return true;
+            }
+            return false;
+        }
+
+        public void ResetAP()
+        {
+            this.ap = totalAP;
+        }
+
 
     }
 }

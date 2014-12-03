@@ -21,7 +21,7 @@ namespace SimpleRPG2
 
         public override string ToString()
         {
-            return string.Format("{0} dmg: {1}", name, damage);
+            return string.Format("{0} dmg: {1} ap: {2}", name, damage,actionPoints);
         }
 
     }

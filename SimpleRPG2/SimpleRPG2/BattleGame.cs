@@ -72,6 +72,8 @@ namespace SimpleRPG2
         //Increment Initiative
         private void NextTurn()
         {
+            ActiveCharacter.ResetAP();
+
             currentCharacter++;
             if(currentCharacter >= characterList.Count)
             {
@@ -97,8 +99,9 @@ namespace SimpleRPG2
             {
                 Console.Clear();
                 Console.WriteLine(board.ToString());
-                Console.WriteLine(battleLog.ToString());
+                //Console.WriteLine(battleLog.ToString());
                 DisplayCharList();
+                DisplayActiveChar();
 
                 if (ActiveCharacter.hp > 0)
                 {
@@ -151,9 +154,18 @@ namespace SimpleRPG2
             Console.WriteLine(txt);
         }
 
+        private void DisplayActiveChar()
+        {
+            Console.WriteLine("----------------------------");
+            Console.WriteLine(ActiveCharacter.ToString());
+            Console.WriteLine("----------------------------");
+
+        }
+
+
         private void DisplayMainMenu()
         {
-            List<string> menu = new List<string>(){"1. View","2. Move", "3. Move To","4. Attack", "5. Skip", "6. Refresh"};
+            List<string> menu = new List<string>(){"1. View","2. Move", "3. Move To","4. Attack", "5. End Turn", "6. Refresh"};
             int input = CoreHelper.displayMenuGetInt(menu);
             switch(input)
             {
@@ -246,7 +258,7 @@ namespace SimpleRPG2
                 Point p = CoreHelper.parseStringPoint(input);
                 if(p != null)
                 {
-                    if(board.MoveCharacter(ActiveCharacter, board.getTileFromLocation(p.x,p.y)))
+                    if(PlayerMove(ActiveCharacter,p.x,p.y))
                     { 
                         valid = true;
                         battleLog.AddEntry(string.Format("{0} moved to {1},{2}", ActiveCharacter.name, p.x, p.y));
@@ -261,7 +273,7 @@ namespace SimpleRPG2
             }
         }
 
-        
+
         private void DisplayAttackMenu()
         {
 
@@ -269,25 +281,23 @@ namespace SimpleRPG2
             var attackCharList = getCharactersFromTileList(board.getTileListFromPattern(ActiveTile, TilePatternType.FourAdj));
 
             List<string> menu = new List<string>();
-            int counter =1;
+            int counter = 1;
             foreach (var c in attackCharList)
             {
                 menu.Add(string.Format("{0}. {1} ({2})", counter, c.name, c.displayChar));
-                    counter++;
+                counter++;
             }
 
             menu.Add(string.Format("{0}. Back", counter));
 
             int input = CoreHelper.displayMenuGetInt(menu);
-           
-                if(input != counter)
-                {
-                    CombatHelper.Attack(ActiveCharacter, attackCharList[input - 1], battleLog, r);
-                }
-            
 
+            if (input != counter)
+            {
+                PlayerAttack(ActiveCharacter, attackCharList[input - 1]);
+               
+            }
         }
-
         //return the list of chars at this tile list
         private List<GameCharacter> getCharactersFromTileList(List<Tile> tileList)
         {
@@ -345,20 +355,23 @@ namespace SimpleRPG2
 
         private void PlayerSkip()
         {
-            battleLog.AddEntry(characterList[currentCharacter].name + " skipped turn.");
+            battleLog.AddEntry(characterList[currentCharacter].name + " ended turn.");
 
             NextTurn();
 
         }
 
-        private void PlayerMove(GameCharacter player, int x, int y)
+        private bool PlayerMove(GameCharacter player, int x, int y)
         {
-
+            return board.MoveCharacter(player, board.getTileFromLocation(x, y));
         }
 
         private void PlayerAttack(GameCharacter player, GameCharacter enemy)
         {
-
+            if (player.SpendAP(player.weapon.actionPoints))
+            {
+                CombatHelper.Attack(player, enemy, battleLog, r);
+            }
         }
 
         //enemy AI
@@ -371,19 +384,19 @@ namespace SimpleRPG2
 
         private void EnemySkip()
         {
-            battleLog.AddEntry(string.Format("{0} skipped its turn.",characterList[currentCharacter].name));
+            battleLog.AddEntry(string.Format("{0} ended its turn.",characterList[currentCharacter].name));
 
             NextTurn();
         }
 
         private void EnemyMove(GameCharacter enemy, int x, int y)
         {
-
+            board.MoveCharacter(enemy, board.getTileFromLocation(x, y));
         }
         
         private void EnemyAttack(GameCharacter enemy, GameCharacter player)
         {
-
+            CombatHelper.Attack(enemy, player, battleLog, r);
         }
 
         private void LoseBattle()
