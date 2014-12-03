@@ -42,20 +42,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BattleGame.cs" />
-    <Compile Include="BattleLog.cs" />
-    <Compile Include="Board.cs" />
-    <Compile Include="CharacterFactory.cs" />
-    <Compile Include="CombatHelper.cs" />
-    <Compile Include="CoreHelper.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="GameCharacter.cs" />
-    <Compile Include="Item.cs" />
-    <Compile Include="ItemFactory.cs" />
-    <Compile Include="PatternFactory.cs" />
+    <Compile Include="Core\BattleLog.cs" />
+    <Compile Include="GameObjects\Board.cs" />
+    <Compile Include="Factories\CharacterFactory.cs" />
+    <Compile Include="Core\CombatHelper.cs" />
+    <Compile Include="Core\CoreHelper.cs" />
+    <Compile Include="Core\Enums.cs" />
+    <Compile Include="GameObjects\GameCharacter.cs" />
+    <Compile Include="GameObjects\Item.cs" />
+    <Compile Include="Factories\ItemFactory.cs" />
+    <Compile Include="Factories\PatternFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Test.cs" />
-    <Compile Include="Tile.cs" />
+    <Compile Include="Test\Test.cs" />
+    <Compile Include="GameObjects\Tile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
