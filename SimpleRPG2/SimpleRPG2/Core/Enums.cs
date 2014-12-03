@@ -13,6 +13,13 @@ namespace SimpleRPG2
        NPC
    }
 
+    public enum CharacterClass
+    {
+        Warrior,
+        Mage,
+        Priest
+    }
+
     public enum ItemType
     {
         Weapon,

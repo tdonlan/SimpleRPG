@@ -298,8 +298,9 @@ namespace SimpleRPG2
                
             }
         }
+
         //return the list of chars at this tile list
-        private List<GameCharacter> getCharactersFromTileList(List<Tile> tileList)
+        public List<GameCharacter> getCharactersFromTileList(List<Tile> tileList)
         {
             List<GameCharacter> retvalList = new List<GameCharacter>();
             foreach(var t in tileList)
@@ -377,8 +378,10 @@ namespace SimpleRPG2
         //enemy AI
         private void RunEnemyTurn()
         {
+            AI.attackNearestPlayer(ActiveCharacter, this);
+            NextTurn();
 
-            EnemySkip();
+            //EnemySkip();
                
         }
 
