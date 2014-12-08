@@ -56,7 +56,7 @@ namespace SimpleRPG2
         {
             battleLog.AddEntry("Starting Battle");
 
-            board = new Board(this);
+            board = BoardFactory.getRandomBoard(this, 20);
             InitChars();
             SetBattleInitiative();
             placeCharactersInBoard();
@@ -165,7 +165,7 @@ namespace SimpleRPG2
 
         private void DisplayMainMenu()
         {
-            List<string> menu = new List<string>(){"1. View","2. Move", "3. Move To","4. Attack", "5. End Turn", "6. Refresh"};
+            List<string> menu = new List<string>(){"1. View","2. Move", "3. Move To","4. Attack", "5. Ranged Attack", "6. End Turn", "7. Refresh"};
             int input = CoreHelper.displayMenuGetInt(menu);
             switch(input)
             {
@@ -182,9 +182,12 @@ namespace SimpleRPG2
                     DisplayAttackMenu();
                     break;
                 case 5:
-                    PlayerSkip();
+                    DisplayRangedAttackMenu();
                     break;
                 case 6:
+                    PlayerSkip();
+                    break;
+                case 7:
                     return;
                 default: break;
             }
@@ -273,6 +276,24 @@ namespace SimpleRPG2
             }
         }
 
+        private void DisplayRangedAttackMenu()
+        {
+            List<string> menu = new List<string>() { "Enter destination ex: 'A,1'" };
+            bool valid = false;
+            while (!valid)
+            {
+                string input = CoreHelper.displayMenuGetStr(menu);
+
+                Point p = CoreHelper.parseStringPoint(input);
+                if (p != null)
+                {
+                    PlayerRangedAttack(ActiveCharacter, board.getTileFromLocation(p.x, p.y));
+                    valid = true;
+                }
+
+            }
+        }
+
 
         private void DisplayAttackMenu()
         {
@@ -297,6 +318,18 @@ namespace SimpleRPG2
                 PlayerAttack(ActiveCharacter, attackCharList[input - 1]);
                
             }
+        }
+
+        public GameCharacter getCharacterFromTile(Tile t)
+        {
+            foreach (var c in characterList)
+            {
+                if (c.x == t.x && c.y == t.y)
+                {
+                    return c;
+                }
+            }
+            return null;
         }
 
         //return the list of chars at this tile list
@@ -365,6 +398,42 @@ namespace SimpleRPG2
         private bool PlayerMove(GameCharacter player, int x, int y)
         {
             return board.MoveCharacter(player, board.getTileFromLocation(x, y));
+        }
+
+        private void PlayerRangedAttack(GameCharacter player, Tile destination)
+        {
+            GameCharacter enemy = getCharacterFromTile(destination);
+
+            if (enemy != null)
+            {
+
+                List<Tile> tileLOSList = board.getBoardLOS(ActiveTile, destination);
+
+                //Testing
+                /*
+                foreach(var t in tileLOSList)
+                {
+                    board.SetTile('*', t);
+                }
+                 * */
+
+                if (tileLOSList[tileLOSList.Count - 1] == destination)
+                {
+                    if (player.SpendAP(player.weapon.actionPoints))
+                    {
+                        CombatHelper.Attack(player, enemy, battleLog, r);
+                    }
+                }
+                else
+                {
+                    string path = "";
+                    foreach (var p in tileLOSList)
+                    {
+                        path += p.ToString() + " ";
+                    }
+                    battleLog.AddEntry("Ranged attack failed. Path: " + path);
+                }
+            }
         }
 
         private void PlayerAttack(GameCharacter player, GameCharacter enemy)

@@ -46,6 +46,8 @@
     <Compile Include="Core\AI.cs" />
     <Compile Include="Core\BattleLog.cs" />
     <Compile Include="Core\PathFind.cs" />
+    <Compile Include="Core\PlotLine.cs" />
+    <Compile Include="Factories\BoardFactory.cs" />
     <Compile Include="GameObjects\Board.cs" />
     <Compile Include="Factories\CharacterFactory.cs" />
     <Compile Include="Core\CombatHelper.cs" />

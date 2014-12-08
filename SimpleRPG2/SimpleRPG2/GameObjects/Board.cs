@@ -26,13 +26,15 @@ namespace SimpleRPG2
 
     public class Board
     {
+        public int size;
         public Tile[,] board;
         public BattleGame game;
 
-        public Board(BattleGame game)
+        public Board(BattleGame game, int size)
         {
+            this.size = size;
             this.game = game;
-            InitBoard(20);
+            InitBoard(size);
         }
 
         private void InitBoard(int size)
@@ -133,6 +135,19 @@ namespace SimpleRPG2
             t.TileChar = gc.displayChar;
         }
 
+        public void SetTile(char c, Tile t)
+        {
+            t.empty = false;
+            t.TileChar = c;
+                 
+        }
+
+        public void clearTile(Tile t)
+        {
+            t.empty = true;
+            t.TileChar = '.';
+        }
+
         public void EmptyTile(Tile t)
         {
             t.empty = true;
@@ -193,6 +208,34 @@ namespace SimpleRPG2
                 }
             }
             return retvalList;
+        }
+
+        public List<Tile> getBoardLOS(Tile origin, Tile destination)
+        {
+            List<Point> pointList = PlotLine.GetPointsOnLine(origin.x, origin.y, destination.x, destination.y).ToList();
+            List<Tile> tileList = new List<Tile>();
+            tileList.Add(origin);
+            
+            foreach(var p in pointList)
+            {
+                Tile tempTile = this.getTileFromLocation(p.x, p.y);
+                if(tempTile != origin && tempTile != destination)
+                {
+                    if(tempTile.empty)
+                    {
+                        tileList.Add(tempTile);
+                    }
+                    else
+                    {
+                        return tileList;
+                    }
+                }
+
+            }
+
+            tileList.Add(destination);
+
+            return tileList;
         }
 
 
