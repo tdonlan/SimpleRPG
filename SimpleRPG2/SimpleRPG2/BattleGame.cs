@@ -99,7 +99,7 @@ namespace SimpleRPG2
             {
                 Console.Clear();
                 Console.WriteLine(board.ToString());
-                //Console.WriteLine(battleLog.ToString());
+                battleLog.Print(1);
                 DisplayCharList();
                 DisplayActiveChar();
 
@@ -196,6 +196,9 @@ namespace SimpleRPG2
 
         private void DisplayViewMenu()
         {
+
+            Console.Write(battleLog.ToString());
+
             //get list of characters
             List<string> displayCharList = new List<string>();
             int count = 1;

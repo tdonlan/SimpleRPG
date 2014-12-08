@@ -22,6 +22,22 @@ namespace SimpleRPG2
             log.Add(txt + "\n");
         }
 
+        public void Print(int num)
+        {
+            string retval = "";
+            int index = 0;
+            if (log.Count > num)
+            {
+                index = log.Count - num;
+            }
+            for (int i = index; i < log.Count; i++)
+            {
+                retval += string.Format("{0}. {1}\n", i, log[i]);
+            }
+
+            Console.Write(retval);
+        }
+
         //return the 4 most recent log entries in reverse order
         public override string ToString()
         {

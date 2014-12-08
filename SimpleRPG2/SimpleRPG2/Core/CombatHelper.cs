@@ -16,7 +16,7 @@ namespace SimpleRPG2
 
             if(r.Next(20) + attacker.attack > defender.ac)
             {
-                int dmg = r.Next(attacker.weapon.damage);
+                int dmg = r.Next(attacker.weapon.damage)+1;
                 defender.hp -= dmg;
                 log.AddEntry(string.Format("{0} hit {1} for {2} damage.", attacker.name, defender.name, dmg));
             }
@@ -25,7 +25,5 @@ namespace SimpleRPG2
                 log.AddEntry(string.Format("{0} missed {1}.", attacker.name, defender.name));
             }
         }
-
-        
     }
 }
