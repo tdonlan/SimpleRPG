@@ -48,6 +48,8 @@ namespace SimpleRPG2
             characterList = new List<GameCharacter>();
             characterList.Add(CharacterFactory.getPlayerCharacter(r));
             characterList.Add(CharacterFactory.getEnemy(r));
+            characterList.Add(CharacterFactory.getEnemy(r));
+            characterList.Add(CharacterFactory.getEnemy(r));
 
             battleLog.AddEntry("Characters Initialized");
         }

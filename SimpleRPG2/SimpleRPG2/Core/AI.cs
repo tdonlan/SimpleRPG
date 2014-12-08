@@ -38,8 +38,12 @@ namespace SimpleRPG2
             Tile curTile = game.board.getTileFromLocation(enemy.x,enemy.y);
             var charList = game.getCharactersFromTileList(game.board.getTileListFromPattern(curTile, TilePatternType.FourAdj));
 
+            var playerList = (from data in charList
+                             where data.type == CharacterType.Player
+                             select data).ToList();
+
             //for now, just return a random enemy close 
-            if (charList.Count > 0)
+            if (playerList.Count > 0)
             {
                 return charList[game.r.Next(charList.Count - 1)];
             }
