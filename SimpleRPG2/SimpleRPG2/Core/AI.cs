@@ -78,14 +78,10 @@ namespace SimpleRPG2
             var pointList = PathFind.Pathfind(board, enemy.x, enemy.y, target.x, target.y);
             foreach(var p in pointList)
             {
-                if(enemy.SpendAP(1))
-                {
-                    board.MoveCharacter(enemy, board.getTileFromLocation(p.x, p.y));
-                }
-                else
-                {
-                    return;
-                }
+                
+                board.MoveCharacter(enemy, board.getTileFromLocation(p.x, p.y));
+                  
+               
             }
         }
 
