@@ -92,6 +92,12 @@ namespace SimpleRPG2
             }
         }
 
+        public Tile getTileFromPoint(Point p)
+        {
+            return getTileFromLocation(p.x, p.y);
+        }
+        
+
         public Point getPointFromTile(Tile t)
         {
             return new Point() { x = t.x, y = t.y };
@@ -153,6 +159,20 @@ namespace SimpleRPG2
             t.empty = true;
             t.TileChar = '.';
         }
+
+        public void AddTempChar(Tile t, char c)
+        {
+            t.TempChar = c;
+        }
+
+        public void ClearTempTiles()
+        {
+            foreach(Tile t in board)
+            {
+                t.TempChar = t.TileChar;
+            }
+        }
+
          
         
         public Tile getFreeTile()
@@ -236,6 +256,31 @@ namespace SimpleRPG2
             tileList.Add(destination);
 
             return tileList;
+        }
+
+        public string ToStringTemp()
+        {
+            string retval = "RPG Board: \n";
+
+            int width = board.GetLength(0);
+            List<char> letterList = CoreHelper.getLetterList();
+            retval += "    ";
+            for (int i = 0; i < width; i++)
+            {
+                retval += letterList[i] + " ";
+            }
+            retval += "\n";
+
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                retval += CoreHelper.getPaddedNum(i) + "| ";
+                for (int j = 0; j < board.GetLength(1); j++)
+                {
+                    retval += board[i, j].TempChar + " ";
+                }
+                retval += "\n";
+            }
+            return retval;
         }
 
 

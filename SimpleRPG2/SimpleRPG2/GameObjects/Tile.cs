@@ -9,6 +9,7 @@ namespace SimpleRPG2
     public class Tile
     {
         public char TileChar { get; set; }
+        public char TempChar { get; set; }
         public bool empty { get; set; }
         public int x { get; set; }
         public int y { get; set; }

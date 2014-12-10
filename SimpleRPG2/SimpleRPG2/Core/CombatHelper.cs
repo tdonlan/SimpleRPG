@@ -19,6 +19,8 @@ namespace SimpleRPG2
                 int dmg = r.Next(attacker.weapon.damage)+1;
                 defender.hp -= dmg;
                 log.AddEntry(string.Format("{0} hit {1} for {2} damage.", attacker.name, defender.name, dmg));
+
+                
             }
             else
             {

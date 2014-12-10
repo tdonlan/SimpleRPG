@@ -96,9 +96,11 @@ namespace SimpleRPG2
 
         private void RunBattle()
         {
+            bool isAction = false;
             BattleStatusType battleStatus = getBattleStatus();
             while(battleStatus == BattleStatusType.Running)
             {
+                isAction = false;
                 Console.Clear();
                 Console.WriteLine(board.ToString());
                 battleLog.Print(1);
@@ -109,18 +111,28 @@ namespace SimpleRPG2
                 {
                     if (ActiveCharacter.type == CharacterType.Player)
                     {
-                        DisplayMainMenu();
+                        isAction = DisplayMainMenu();
+
                     }
                     else
                     {
                         RunEnemyTurn();
                         System.Threading.Thread.Sleep(1000);
                     }
+
+                    if (isAction)
+                    {
+                        DisplayTempBoard();
+                        System.Threading.Thread.Sleep(1000);
+                    }
+
                 }
                 else
                 {
                     NextTurn();
                 }
+
+                
 
                 battleStatus = getBattleStatus();
             }
@@ -133,6 +145,17 @@ namespace SimpleRPG2
                 WinBattle();
             }
            
+        }
+
+        private void DisplayTempBoard()
+        {
+            Console.Clear();
+            Console.WriteLine(board.ToStringTemp());
+            battleLog.Print(1);
+            DisplayCharList();
+            DisplayActiveChar();
+
+            board.ClearTempTiles();
         }
 
         //display the list of characters, indicating active
@@ -164,9 +187,11 @@ namespace SimpleRPG2
 
         }
 
-
-        private void DisplayMainMenu()
+        //Return true if the player takes an Action
+        private bool DisplayMainMenu()
         {
+            bool isAction = false;
+
             List<string> menu = new List<string>(){"1. View","2. Move", "3. Move To","4. Attack", "5. Ranged Attack", "6. End Turn", "7. Refresh"};
             int input = CoreHelper.displayMenuGetInt(menu);
             switch(input)
@@ -176,24 +201,28 @@ namespace SimpleRPG2
                     break;
                 case 2:
                     DisplayMoveMenu();
+                    isAction = true;
                     break;
                 case 3:
                     DisplayMoveToMenu();
+                    isAction = true;
                     break;
                 case 4:
                     DisplayAttackMenu();
+                    isAction = true;
                     break;
                 case 5:
                     DisplayRangedAttackMenu();
+                    isAction = true;
                     break;
                 case 6:
                     PlayerSkip();
                     break;
                 case 7:
-                    return;
+                    break;
                 default: break;
             }
-            return;
+            return isAction;
         }
 
         private void DisplayViewMenu()
@@ -321,7 +350,8 @@ namespace SimpleRPG2
             if (input != counter)
             {
                 PlayerAttack(ActiveCharacter, attackCharList[input - 1]);
-               
+
+                board.AddTempChar(board.getTileFromLocation(attackCharList[input - 1].x, attackCharList[input - 1].y),'X');
             }
         }
 
@@ -415,12 +445,12 @@ namespace SimpleRPG2
                 List<Tile> tileLOSList = board.getBoardLOS(ActiveTile, destination);
 
                 //Testing
-                /*
+                
                 foreach(var t in tileLOSList)
                 {
-                    board.SetTile('*', t);
+                    board.AddTempChar(t, '*');
                 }
-                 * */
+               
 
                 if (tileLOSList[tileLOSList.Count - 1] == destination)
                 {
