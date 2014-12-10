@@ -64,6 +64,7 @@ namespace SimpleRPG2
             battleLog.AddEntry("Starting Battle");
 
             board = BoardFactory.getRandomBoard(this, 20);
+
             InitChars();
             SetBattleInitiative();
             placeCharactersInBoard();
@@ -113,8 +114,6 @@ namespace SimpleRPG2
                 battleLog.Print(1);
                 DisplayCharList();
                 DisplayActiveChar();
-
-
 
                 if (ActiveCharacter.hp > 0)
                 {
@@ -205,7 +204,9 @@ namespace SimpleRPG2
         {
             bool isAction = false;
 
-            List<string> menu = new List<string>(){"1. View","2. Move", "3. Move To","4. Attack", "5. Ranged Attack","6. Use Item", "7. End Turn", "8. Refresh"};
+            List<string> menu = new List<string>(){"1. View","2. Move",
+                "3. Move To","4. Attack", "5. Ranged Attack","6. Use Item",
+                "7. Use Ability", "8. End Turn", "9. Refresh"};
             int input = CoreHelper.displayMenuGetInt(menu);
             switch(input)
             {
@@ -233,9 +234,14 @@ namespace SimpleRPG2
                     isAction = true;
                     break;
                 case 7:
+                    DisplayAbilityMenu();
+                    isAction = true;
+                    break;
+
+                case 8:
                     PlayerSkip();
                     break;
-                case 8:
+                case 9:
                     break;
                 default: break;
             }
@@ -400,6 +406,45 @@ namespace SimpleRPG2
             return;
         }
 
+        public void DisplayAbilityMenu()
+        {
+
+            List<string> displayList = new List<string>();
+            int counter = 1;
+
+            var usableAbilityList = (from data in ActiveCharacter.abilityList
+                                    where data.uses > 0
+                                    select data).ToList();
+
+            foreach (var i in usableAbilityList)
+            {
+                displayList.Add(string.Format("{0}. {1}", counter, i.name));
+                    counter++;
+            }
+
+            int input = CoreHelper.displayMenuGetInt(displayList);
+
+            if (input > 0 && input <= usableAbilityList.Count)
+            {
+
+                bool valid = false;
+                while (!valid)
+                {
+                    string targetTile = CoreHelper.displayMenuGetStr(new List<string>() { "Enter Target: (ex: A,1)" });
+
+                    Point p = CoreHelper.parseStringPoint(targetTile);
+                    if (p != null)
+                    {
+                        UseAbility(ActiveCharacter, usableAbilityList[input - 1], board.getTileFromLocation(p.x, p.y));
+
+                        valid = true;
+                    }
+                }
+            }
+
+            return;
+        }
+
         public GameCharacter getCharacterFromTile(Tile t)
         {
             foreach (var c in characterList)
@@ -488,8 +533,7 @@ namespace SimpleRPG2
 
                 List<Tile> tileLOSList = board.getBoardLOS(ActiveTile, destination);
 
-                //Testing
-                
+        
                 foreach(var t in tileLOSList)
                 {
                     board.AddTempChar(t, '*');
@@ -547,8 +591,22 @@ namespace SimpleRPG2
 
         }
 
-    
+        public void UseAbility(GameCharacter character, Ability ability, Tile target)
+        {
+            if(character.abilityList.Contains(ability))
+            {
+                if(AbilityHelper.UseAbility(character, ability, target, this))
+                {
+                    battleLog.AddEntry(string.Format("{0} used {1}",character.name,ability.name));
+                }
+                else
+                {
+                    battleLog.AddEntry(string.Format("{0} failed to use {1}", character.name, ability.name));
+                }
+            }
+        }
 
+   
         //enemy AI
         private void RunEnemyTurn()
         {

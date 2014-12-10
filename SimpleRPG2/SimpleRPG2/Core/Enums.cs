@@ -59,8 +59,19 @@ namespace SimpleRPG2
         NineSquare,
         ThreeLineVert,
         ThreeLineHor,
+    }
 
-        
+    public enum AbilityTargetType
+    {
+        Self,
+        SingleFriend,
+        SingleFoe,
+        AllFriends,
+        AllFoes,
+        PointTarget,
+        LOSTarget,
+        PointAOE,
+        LOSAOE,
     }
 
 }

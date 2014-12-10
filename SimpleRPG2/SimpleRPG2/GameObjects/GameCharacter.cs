@@ -28,15 +28,21 @@ namespace SimpleRPG2
         public List<ActiveEffect> activeEffects { get; set; }
         public List<PassiveEffect> passiveEffects { get; set; }
 
-        public GameCharacter() { 
+        public List<Ability> abilityList { get; set; }
+
+        public GameCharacter() {
+            inventory = new List<Item>();
             activeEffects = new List<ActiveEffect>();
             passiveEffects = new List<PassiveEffect>();
+            abilityList = new List<Ability>();
         }
 
         public override string ToString()
         {
             string retval = name + "\n";
             retval += string.Format("AC: {0} HP: {1}/{2} Atk: {3} AP: {4}/{5}\n", ac, hp, totalHP, attack, ap,totalAP);
+
+            
             retval += weapon.ToString() + "\n";
 
             return retval;
@@ -61,7 +67,6 @@ namespace SimpleRPG2
         {
             ActivateEffect(a,game);
 
-            
             a.duration--;
             if(a.duration > 0)
             {

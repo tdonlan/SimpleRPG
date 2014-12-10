@@ -49,6 +49,8 @@ namespace SimpleRPG2
                 }
             }
 
+            this.ClearTempTiles();
+
             game.battleLog.AddEntry("Board Initialized");
         }
 
@@ -203,17 +205,16 @@ namespace SimpleRPG2
 
         public List<Tile> getTileListFromPattern(Tile origin, TilePatternType pattern)
         {
-            List<Tile> retvalList = new List<Tile>();
-
-            switch(pattern)
+            switch (pattern)
             {
                 case TilePatternType.FourAdj:
                     return getTileListFromPointList(origin, PatternFactory.getFourAdj());
+                case TilePatternType.NineSquare:
+                    return getTileListFromPointList(origin, PatternFactory.getNineSquare());
                 default:
-                    break;
-            }
+                    return new List<Tile>() { origin };
 
-            return retvalList;
+            }
         }
 
         private List<Tile> getTileListFromPointList(Tile origin, List<Point> pointList)
