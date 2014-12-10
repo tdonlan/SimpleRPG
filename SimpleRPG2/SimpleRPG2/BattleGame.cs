@@ -17,6 +17,9 @@ namespace SimpleRPG2
 
         public Random r;
 
+        public int TurnCounter;
+        public bool NewTurn;
+
         public GameCharacter ActiveCharacter
         {
             get
@@ -56,6 +59,8 @@ namespace SimpleRPG2
 
         private void StartBattle()
         {
+            TurnCounter = 1;
+            NewTurn = true;
             battleLog.AddEntry("Starting Battle");
 
             board = BoardFactory.getRandomBoard(this, 20);
@@ -75,6 +80,8 @@ namespace SimpleRPG2
         private void NextTurn()
         {
             ActiveCharacter.ResetAP();
+            TurnCounter++;
+            NewTurn = true;
 
             currentCharacter++;
             if(currentCharacter >= characterList.Count)
@@ -107,8 +114,16 @@ namespace SimpleRPG2
                 DisplayCharList();
                 DisplayActiveChar();
 
+
+
                 if (ActiveCharacter.hp > 0)
                 {
+                    if(NewTurn)
+                    {
+                        NewTurn = false;
+                        ActiveCharacter.RunActiveEffects(this);
+                    }
+
                     if (ActiveCharacter.type == CharacterType.Player)
                     {
                         isAction = DisplayMainMenu();
@@ -131,8 +146,6 @@ namespace SimpleRPG2
                 {
                     NextTurn();
                 }
-
-                
 
                 battleStatus = getBattleStatus();
             }
@@ -192,7 +205,7 @@ namespace SimpleRPG2
         {
             bool isAction = false;
 
-            List<string> menu = new List<string>(){"1. View","2. Move", "3. Move To","4. Attack", "5. Ranged Attack", "6. End Turn", "7. Refresh"};
+            List<string> menu = new List<string>(){"1. View","2. Move", "3. Move To","4. Attack", "5. Ranged Attack","6. Use Item", "7. End Turn", "8. Refresh"};
             int input = CoreHelper.displayMenuGetInt(menu);
             switch(input)
             {
@@ -216,9 +229,13 @@ namespace SimpleRPG2
                     isAction = true;
                     break;
                 case 6:
-                    PlayerSkip();
+                    DisplayItemMenu();
+                    isAction = true;
                     break;
                 case 7:
+                    PlayerSkip();
+                    break;
+                case 8:
                     break;
                 default: break;
             }
@@ -355,6 +372,34 @@ namespace SimpleRPG2
             }
         }
 
+        public void DisplayItemMenu()
+        {
+
+            List<string> itemList = new List<string>();
+            int counter = 1;
+
+            var usableItemList = (from data in ActiveCharacter.inventory
+                                 where data is UsableItem
+                                 select data).ToList();
+
+            foreach(var i in usableItemList)
+            {
+                if(i is UsableItem)
+                {
+                    itemList.Add(string.Format("{0}. {1}",counter,i.name));
+                    counter++;
+                }
+            }
+
+
+            int input = CoreHelper.displayMenuGetInt(itemList);
+            UsableItem tempItem = (UsableItem)usableItemList[input - 1];
+            UseItem(ActiveCharacter, tempItem);
+
+
+            return;
+        }
+
         public GameCharacter getCharacterFromTile(Tile t)
         {
             foreach (var c in characterList)
@@ -419,7 +464,6 @@ namespace SimpleRPG2
             {
                 return BattleStatusType.Running;
             }
-          
         }
 
         private void PlayerSkip()
@@ -478,6 +522,32 @@ namespace SimpleRPG2
                 CombatHelper.Attack(player, enemy, battleLog, r);
             }
         }
+
+        public void UseItem(GameCharacter character, UsableItem item)
+        {
+            if(character.SpendAP(item.actionPoints))
+            {
+                item.uses--;
+                if(item.uses <=0)
+                {
+                    //should this logic be here?
+                    ActiveCharacter.inventory.Remove(item);
+                }
+                foreach(var a in item.activeEffects)
+                {
+                    character.AddActiveEffect(a,this);
+                }
+
+                battleLog.AddEntry(string.Format("{0} used item {1}", character.name, item.name));
+            }
+            else
+            {
+                battleLog.AddEntry(string.Format("{0} was unable to use item {1}",character.name, item.name));
+            }
+
+        }
+
+    
 
         //enemy AI
         private void RunEnemyTurn()

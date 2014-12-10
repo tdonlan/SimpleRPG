@@ -25,7 +25,13 @@ namespace SimpleRPG2
         public Weapon weapon { get; set; }
         public Armor armor { get; set; }
 
-        public GameCharacter() { }
+        public List<ActiveEffect> activeEffects { get; set; }
+        public List<PassiveEffect> passiveEffects { get; set; }
+
+        public GameCharacter() { 
+            activeEffects = new List<ActiveEffect>();
+            passiveEffects = new List<PassiveEffect>();
+        }
 
         public override string ToString()
         {
@@ -51,6 +57,49 @@ namespace SimpleRPG2
             this.ap = totalAP;
         }
 
+        public void AddActiveEffect(ActiveEffect a, BattleGame game)
+        {
+            ActivateEffect(a,game);
 
+            
+            a.duration--;
+            if(a.duration > 0)
+            {
+                activeEffects.Add(a);
+            }
+        }
+
+        //Occurs once per turn
+        public void RunActiveEffects(BattleGame game)
+        {
+            for (int i = activeEffects.Count - 1; i >= 0;i-- )
+            {
+                ActivateEffect(activeEffects[i],game);
+
+                activeEffects[i].duration--;
+                if(activeEffects[i].duration <=0)
+                {
+                    activeEffects.RemoveAt(i);
+                }
+            }
+        }
+
+        private void ActivateEffect(ActiveEffect effect, BattleGame game)
+        {
+            switch(effect.statType)
+            {
+                case StatType.HitPoints:
+                    this.hp += effect.amount;
+                    if(this.hp > this.totalHP)
+                    {
+                        this.hp = this.totalHP;
+
+                        game.battleLog.AddEntry(string.Format("{0} was healed for {1}", this.name, effect.amount));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

@@ -12,6 +12,34 @@ namespace SimpleRPG2
         public ItemType type { get; set; }
         public List<PassiveEffect> passiveEffects { get; set; }
         public List<ActiveEffect> activeEffects { get; set; }
+
+        public string getEffects()
+        {
+            string retval = "";
+            foreach(var p in passiveEffects)
+            {
+                retval+= p.ToString() + " ";
+            }
+
+            foreach(var a in activeEffects)
+            {
+                retval += a.ToString() + " ";
+            }
+
+            return retval;
+        }
+
+    }
+
+    public class UsableItem : Item
+    {
+        public int actionPoints { get; set; }
+        public int uses { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} ap: {1} use: {2} effects: {3}", name, actionPoints,uses, getEffects());
+        }
     }
 
     public class Weapon : Item
@@ -37,6 +65,11 @@ namespace SimpleRPG2
         public StatType statType { get; set; }
         public int amount {get;set;}
 
+        public override string ToString()
+        {
+            return string.Format("{0} (Passive): {1} {2}", name, statType.ToString(), amount);
+        }
+
     }
 
     public class ActiveEffect
@@ -45,5 +78,12 @@ namespace SimpleRPG2
         public StatType statType { get; set; }
         public int amount { get; set; }
         public int duration { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} (Active): {1} {2} {3} turns", name, statType.ToString(), amount,duration);
+        }
     }
+
+    
 }
