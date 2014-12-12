@@ -27,5 +27,43 @@ namespace SimpleRPG2
 
             return fireball;
         }
+
+        public static Ability getHeal()
+        {
+            ActiveEffect healEffect = new ActiveEffect() { name = "Heal", duration = 1, amount = 10, statType = StatType.HitPoints };
+            Ability heal = new Ability()
+            {
+                name = "Heal",
+                description = "Heal Self",
+                ap = 5,
+                range = 1,
+                uses = 1,
+                targetType = AbilityTargetType.Self,
+                tilePatternType = TilePatternType.Single,
+                activeEffects = new List<ActiveEffect>() { healEffect },
+                passiveEffects = null
+            };
+
+            return heal;
+        }
+
+        public static Ability getTeleport()
+        {
+            ActiveEffect teleportEffect = new ActiveEffect() { name = "Teleport", duration = 1, amount = 0, statType = StatType.Movement };
+            Ability teleport = new Ability()
+            {
+                name = "Teleport",
+                description = "Teleport to a selected location on the map",
+                ap = 10,
+                range = 20,
+                uses = 1,
+                targetType = AbilityTargetType.PointEmpty,
+                tilePatternType = TilePatternType.Single,
+                activeEffects = new List<ActiveEffect>() { teleportEffect},
+                passiveEffects = null
+            };
+
+            return teleport;
+        }
     }
 }

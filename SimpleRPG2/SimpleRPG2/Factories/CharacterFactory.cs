@@ -23,6 +23,7 @@ namespace SimpleRPG2
             retval.weapon = ItemFactory.getWeapon(r);
 
             retval.abilityList.Add(AbilityFactory.getFireball());
+            retval.abilityList.Add(AbilityFactory.getTeleport());
                 
             return retval;
         }

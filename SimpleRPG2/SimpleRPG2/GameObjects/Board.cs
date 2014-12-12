@@ -111,6 +111,24 @@ namespace SimpleRPG2
             return Math.Abs(a.x - b.x) + Math.Abs(a.y-b.y);
         }
 
+        //Move character without spending Action Points
+        public bool MoveCharacterFree(GameCharacter gc, Tile Destination)
+        {
+             bool retval = false;
+             if (Destination != null)
+             {
+                 if (Destination.empty)
+                 {
+                     EmptyTile(board[gc.x, gc.y]);
+                     FillTile(gc, Destination);
+
+                     retval = true;
+                 }
+
+             }
+             return retval;
+        }
+
         public bool MoveCharacter(GameCharacter gc, Tile Destination)
         {
             bool retval = false;

@@ -56,6 +56,28 @@ namespace SimpleRPG2
 
         }
 
+        //Special case for movement / teleport abilities
+        private static bool UseAbilityPointHelper(GameCharacter character, Ability ability, Tile target, BattleGame game)
+        {
+            foreach(ActiveEffect ae in ability.activeEffects)
+            {
+                if(ae.statType == StatType.Movement)
+                {
+                    game.board.MoveCharacterFree(character, target);
+                }
+                else
+                {
+                    GameCharacter targetChar = game.getCharacterFromTile(target);
+                    if(targetChar != null)
+                    {
+                        targetChar.AddActiveEffect(ae,game);
+                    }
+                }
+            }
+
+            return true;
+        }
+
         private static bool UseAbilityOnCharList(Ability ability, List<GameCharacter> characterList, BattleGame game)
         {
             foreach (var character in characterList)
@@ -73,9 +95,21 @@ namespace SimpleRPG2
         {
             if (character.SpendAP(ability.ap))
             {
-                //dont spend uses for now.
                 return UseAbilityAOEHelper(character, ability, target, game);
             }
+            return false;
+        }
+
+        private static bool UseAbilityPointEmpty(GameCharacter character, Ability ability, Tile target, BattleGame game)
+        {
+            if(target.empty)
+            {
+                if (character.SpendAP(ability.ap))
+                {
+                    UseAbilityPointHelper(character, ability, target, game);
+                }
+            }
+          
             return false;
         }
 
@@ -95,8 +129,6 @@ namespace SimpleRPG2
                 return false;
             }
         }
-
-
 
         private static bool UseAbilityAllFoes(GameCharacter character, Ability ability, Tile target, BattleGame game)
         {
@@ -152,8 +184,6 @@ namespace SimpleRPG2
             }
         }
 
-
-
         public static bool UseAbility(GameCharacter character, Ability ability, Tile target, BattleGame game)
         {
             switch (ability.targetType)
@@ -168,6 +198,8 @@ namespace SimpleRPG2
                     return UseAbilityAllFriends(character, ability, target, game);
                 case AbilityTargetType.AllFoes:
                     return UseAbilityAllFoes(character, ability, target, game);
+                case AbilityTargetType.PointEmpty:
+                    return UseAbilityPointEmpty(character, ability, target, game);
                 case AbilityTargetType.PointTarget:
                     return UseAbilityPoint(character, ability, target, game);
                 case AbilityTargetType.LOSTarget:

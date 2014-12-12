@@ -29,9 +29,11 @@ namespace SimpleRPG2
 
     public enum StatType
     {
+       
         Armor,
         HitPoints,
-        Attack
+        Attack,
+        Movement
     }
 
     public enum BattleStatusType
@@ -68,6 +70,7 @@ namespace SimpleRPG2
         SingleFoe,
         AllFriends,
         AllFoes,
+        PointEmpty,
         PointTarget,
         LOSTarget,
         PointAOE,
