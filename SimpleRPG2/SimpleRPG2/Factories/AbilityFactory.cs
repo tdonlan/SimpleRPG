@@ -19,7 +19,7 @@ namespace SimpleRPG2
                 ap = 5,
                 range = 20,
                 uses = 5,
-                targetType = AbilityTargetType.LOSAOE,
+                targetType = AbilityTargetType.LOSTarget,
                 tilePatternType = TilePatternType.NineSquare,
                 activeEffects = new List<ActiveEffect>() {fireballEffect },
                 passiveEffects=null
@@ -49,7 +49,7 @@ namespace SimpleRPG2
 
         public static Ability getTeleport()
         {
-            ActiveEffect teleportEffect = new ActiveEffect() { name = "Teleport", duration = 1, amount = 0, statType = StatType.MoveSelf };
+            ActiveEffect teleportEffect = new ActiveEffect() { name = "Teleport", duration = 1, amount = 0, statType = StatType.Teleport };
             Ability teleport = new Ability()
             {
                 name = "Teleport",
@@ -68,7 +68,7 @@ namespace SimpleRPG2
 
         public static Ability getKnockback()
         {
-            ActiveEffect knockbackEffect = new ActiveEffect() { name = "Knockback", duration = 1, amount = 1, statType = StatType.MoveTarget };
+            ActiveEffect knockbackEffect = new ActiveEffect() { name = "Knockback", duration = 1, amount = 1, statType = StatType.Knockback };
             Ability knockback = new Ability()
             {
                 name = "Knockback",

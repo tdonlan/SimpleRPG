@@ -17,7 +17,6 @@ namespace SimpleRPG2
             {
                 if (character.SpendAP(ability.ap))
                 {
-                    //dont spend uses for now.
                     return UseAbilityAOEHelper(character, ability, target, game);
                 }
                 return false;
@@ -29,74 +28,88 @@ namespace SimpleRPG2
 
         }
 
-        private static bool UseAbilityAOEHelper(GameCharacter character, Ability ability, Tile target, BattleGame game)
+        private static bool UseAbilityLOSEmpty(GameCharacter character, Ability ability, Tile target, BattleGame game)
         {
-
-            TilePatternType patternType = TilePatternType.Single;
-
-            switch (ability.targetType)
+            if (target.empty)
             {
-                case AbilityTargetType.LOSAOE:
-                    patternType = ability.tilePatternType;
-                    break;
-                case AbilityTargetType.PointAOE:
-                    patternType = ability.tilePatternType;
-                    break;
+                Tile ActiveTile = game.board.getTileFromLocation(character.x, character.y);
+                var tileLOSList = game.board.getBoardLOS(ActiveTile, target);
 
-                default:
-                    return false;
-
-            }
-
-            //get tile pattern from AOE
-            var tileAOEList = game.board.getTileListFromPattern(target, ability.tilePatternType);
-            var charAOEList = game.getCharactersFromTileList(tileAOEList);
-
-            return UseAbilityOnCharList(ability, charAOEList, game);
-
-        }
-
-        //Special case for movement / teleport abilities
-        private static bool UseAbilityPointHelper(GameCharacter character, Ability ability, Tile target, BattleGame game)
-        {
-            foreach(ActiveEffect ae in ability.activeEffects)
-            {
-                if(ae.statType == StatType.MoveSelf)
+                if (tileLOSList[tileLOSList.Count - 1] == target)
                 {
-                    game.board.MoveCharacterFree(character, target);
-                }
-                else if(ae.statType == StatType.MoveTarget)
-                {
-                    //calculate the destination based on character / target and range.
-                    Tile ActiveTile = game.board.getTileFromLocation(character.x,character.y);
-                    GameCharacter targetChar = game.getCharacterFromTile(target);
-                    List<Tile> moveTargetList = game.board.getMoveTargetTileList(ActiveTile, target, ae.amount);
-                    if(moveTargetList.Count >0)
+                    if (character.SpendAP(ability.ap))
                     {
-                        Tile moveTile = moveTargetList[moveTargetList.Count-1];
-                        game.board.MoveCharacterFree(targetChar,moveTile);
+                        return UseAbilityAOEHelper(character, ability, target, game);
                     }
+                    return false;
                 }
                 else
                 {
-                    GameCharacter targetChar = game.getCharacterFromTile(target);
-                    if(targetChar != null)
+                    return false;
+                }
+            }
+
+            return false;
+
+        }
+
+        private static bool UseAbilityAOEHelper(GameCharacter character, Ability ability, Tile target, BattleGame game)
+        {
+
+            var tileAOEList = game.board.getTileListFromPattern(target, ability.tilePatternType);
+            var charAOEList = game.getCharactersFromTileList(tileAOEList);
+
+            return UseAbilityOnCharList(character,target, ability, charAOEList, game);
+
+        }
+
+        private static bool UseAbilityOnCharList(GameCharacter sourceCharacter, Tile target, Ability ability, List<GameCharacter> characterList, BattleGame game)
+        {
+            //special conditions if we're doing something on sourceCharacter
+            if(characterList.Count ==0)
+            {
+                foreach (var ae in ability.activeEffects)
+                {
+                    if (ae.statType == StatType.Teleport)
                     {
-                        targetChar.AddActiveEffect(ae,game);
+                        game.board.MoveCharacterFree(sourceCharacter, target);
                     }
                 }
             }
 
-            return true;
-        }
-
-        private static bool UseAbilityOnCharList(Ability ability, List<GameCharacter> characterList, BattleGame game)
-        {
             foreach (var character in characterList)
             {
-                foreach (var a in ability.activeEffects)
+                foreach (var ae in ability.activeEffects)
                 {
-                    character.AddActiveEffect(a, game);
+                    if (ae.statType == StatType.Teleport)
+                    {
+                        game.board.MoveCharacterFree(character, target);
+                    }
+                    else if (ae.statType == StatType.Knockback) //move away from sourceCharacter
+                    {
+                        Tile sourceTile = game.board.getTileFromLocation(sourceCharacter.x, sourceCharacter.y);
+                        Tile charTile = game.board.getTileFromLocation(character.x, character.y);
+                        List<Tile> moveTargetList = game.board.getMoveTargetTileList(sourceTile, charTile, ae.amount);
+                        if (moveTargetList.Count > 0)
+                        {
+                            Tile moveTile = moveTargetList[moveTargetList.Count - 1];
+                            game.board.MoveCharacterFree(character, moveTile);
+                        }
+                    }
+                    else if(ae.statType == StatType.Explode) //move away from target
+                    {
+                        Tile charTile = game.board.getTileFromLocation(character.x, character.y);
+                        List<Tile> moveTargetList = game.board.getMoveTargetTileList(target, charTile, ae.amount);
+                        if (moveTargetList.Count > 0)
+                        {
+                            Tile moveTile = moveTargetList[moveTargetList.Count - 1];
+                            game.board.MoveCharacterFree(character, moveTile);
+                        }
+                    }
+                    else
+                    {
+                        character.AddActiveEffect(ae, game);
+                    }
                 }
             }
 
@@ -111,19 +124,21 @@ namespace SimpleRPG2
             }
             return false;
         }
-
+        
+        
         private static bool UseAbilityPointEmpty(GameCharacter character, Ability ability, Tile target, BattleGame game)
         {
             if(target.empty)
             {
                 if (character.SpendAP(ability.ap))
                 {
-                    UseAbilityPointHelper(character, ability, target, game);
+                    UseAbilityAOEHelper(character, ability, target, game);
                 }
             }
           
             return false;
         }
+
 
         //Includes Self
         private static bool UseAbilityAllFriends(GameCharacter character, Ability ability, Tile target, BattleGame game)
@@ -134,7 +149,7 @@ namespace SimpleRPG2
                                  where data.type == character.type
                                  select data;
 
-                return UseAbilityOnCharList(ability, friendList.ToList(), game);
+                return UseAbilityOnCharList(character,target, ability, friendList.ToList(), game);
             }
             else
             {
@@ -150,7 +165,7 @@ namespace SimpleRPG2
                               where data.type != character.type
                               select data;
 
-                return UseAbilityOnCharList(ability, foeList.ToList(), game);
+                return UseAbilityOnCharList(character,target, ability, foeList.ToList(), game);
             }
             else
             {
@@ -165,7 +180,7 @@ namespace SimpleRPG2
                 GameCharacter targetChar = game.getCharacterFromTile(target);
                 if (targetChar != null & targetChar.type == character.type)
                 {
-                    return UseAbilityOnCharList(ability, new List<GameCharacter>() { targetChar }, game);
+                    return UseAbilityOnCharList(character,target, ability, new List<GameCharacter>() { targetChar }, game);
                 }
             }
             return false;
@@ -178,7 +193,7 @@ namespace SimpleRPG2
                 GameCharacter targetChar = game.getCharacterFromTile(target);
                 if (targetChar != null & targetChar.type != character.type)
                 {
-                    return UseAbilityOnCharList(ability, new List<GameCharacter>() { targetChar }, game);
+                    return UseAbilityOnCharList(character,target, ability, new List<GameCharacter>() { targetChar }, game);
                 }
             }
             return false;
@@ -188,7 +203,7 @@ namespace SimpleRPG2
         {
             if (character.SpendAP(ability.ap))
             {
-                return UseAbilityOnCharList(ability, new List<GameCharacter>() { character }, game);
+                return UseAbilityOnCharList(character,target, ability, new List<GameCharacter>() { character }, game);
             }
             else
             {
@@ -214,11 +229,9 @@ namespace SimpleRPG2
                     return UseAbilityPointEmpty(character, ability, target, game);
                 case AbilityTargetType.PointTarget:
                     return UseAbilityPoint(character, ability, target, game);
+                case AbilityTargetType.LOSEmpty:
+                    return UseAbilityLOSEmpty(character, ability, target, game);
                 case AbilityTargetType.LOSTarget:
-                    return UseAbilityLOS(character, ability, target, game);
-                case AbilityTargetType.PointAOE:
-                    return UseAbilityPoint(character, ability, target, game);
-                case AbilityTargetType.LOSAOE:
                     return UseAbilityLOS(character, ability, target, game);
                 default:
                     return false;

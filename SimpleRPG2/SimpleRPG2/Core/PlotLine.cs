@@ -12,8 +12,8 @@ namespace SimpleRPG2
         //return the ranged point on the line that passes through a/b (after passing through b) 
         public static Point getRangedPointOnLine(Point a, Point b, int range)
         {
-            int slopeX = a.x - b.x;
-            int slopeY = a.y - b.y;
+            int slopeX = b.x - a.x;
+            int slopeY = b.y - a.y;
             return new Point(b.x + slopeX, b.y + slopeY);
         }
 

@@ -33,8 +33,9 @@ namespace SimpleRPG2
         Armor,
         HitPoints,
         Attack,
-        MoveSelf,
-        MoveTarget,
+        Teleport, //move character to target
+        Knockback, // move targets away from character
+        Explode, //move characters away from target
        
     }
 
@@ -74,9 +75,8 @@ namespace SimpleRPG2
         AllFoes,
         PointEmpty,
         PointTarget,
+        LOSEmpty,
         LOSTarget,
-        PointAOE,
-        LOSAOE,
     }
 
 }
