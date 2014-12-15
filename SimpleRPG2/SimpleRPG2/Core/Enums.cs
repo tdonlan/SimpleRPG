@@ -33,7 +33,9 @@ namespace SimpleRPG2
         Armor,
         HitPoints,
         Attack,
-        Movement
+        MoveSelf,
+        MoveTarget,
+       
     }
 
     public enum BattleStatusType

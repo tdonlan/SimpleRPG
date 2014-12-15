@@ -193,6 +193,7 @@ namespace SimpleRPG2
             }
         }
 
+
          
         
         public Tile getFreeTile()
@@ -219,6 +220,27 @@ namespace SimpleRPG2
             return freeTileList;
         }
 
+
+        //return the tile (or list of tiles) that forms a straight line from the origin, through the target outward, for range tiles
+        //using Bresenham Plotline along empty squares)
+        public List<Tile> getMoveTargetTileList(Tile origin, Tile target, int range)
+        {
+            List<Tile> retvalList = new List<Tile>();
+
+            Point rangedPoint = PlotLine.getRangedPointOnLine(getPointFromTile(origin), getPointFromTile(target), range);
+            List<Point> pointList = PlotLine.GetPointsOnLine(target.x,target.y,rangedPoint.x,rangedPoint.y).ToList();
+
+            foreach(Point p in pointList)
+            {
+                Tile tempTile = getTileFromPoint(p);
+                if(tempTile.empty)
+                {
+                    retvalList.Add(tempTile);
+                }
+            }
+
+            return retvalList;
+        }
 
 
         public List<Tile> getTileListFromPattern(Tile origin, TilePatternType pattern)

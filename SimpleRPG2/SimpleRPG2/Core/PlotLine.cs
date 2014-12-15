@@ -9,6 +9,15 @@ namespace SimpleRPG2
     public class PlotLine
     {
 
+        //return the ranged point on the line that passes through a/b (after passing through b) 
+        public static Point getRangedPointOnLine(Point a, Point b, int range)
+        {
+            int slopeX = a.x - b.x;
+            int slopeY = a.y - b.y;
+            return new Point(b.x + slopeX, b.y + slopeY);
+        }
+
+
         public static IEnumerable<Point> GetPointsOnLine(int x0, int y0, int x1, int y1)
         {
             bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);

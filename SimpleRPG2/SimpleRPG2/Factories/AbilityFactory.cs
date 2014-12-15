@@ -49,7 +49,7 @@ namespace SimpleRPG2
 
         public static Ability getTeleport()
         {
-            ActiveEffect teleportEffect = new ActiveEffect() { name = "Teleport", duration = 1, amount = 0, statType = StatType.Movement };
+            ActiveEffect teleportEffect = new ActiveEffect() { name = "Teleport", duration = 1, amount = 0, statType = StatType.MoveSelf };
             Ability teleport = new Ability()
             {
                 name = "Teleport",
@@ -64,6 +64,28 @@ namespace SimpleRPG2
             };
 
             return teleport;
+        }
+
+        public static Ability getKnockback()
+        {
+            ActiveEffect knockbackEffect = new ActiveEffect() { name = "Knockback", duration = 1, amount = 1, statType = StatType.MoveTarget };
+            Ability knockback = new Ability()
+            {
+                name = "Knockback",
+                description = "Knockback the target 1 tile",
+                ap = 5,
+                range = 1,
+                uses = 1,
+                targetType = AbilityTargetType.SingleFoe,
+                tilePatternType = TilePatternType.Single,
+                activeEffects = new List<ActiveEffect>() { knockbackEffect },
+                passiveEffects = null,
+
+            };
+
+            return knockback;
+
+
         }
     }
 }

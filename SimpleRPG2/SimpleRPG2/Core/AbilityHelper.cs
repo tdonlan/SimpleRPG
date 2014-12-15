@@ -61,9 +61,21 @@ namespace SimpleRPG2
         {
             foreach(ActiveEffect ae in ability.activeEffects)
             {
-                if(ae.statType == StatType.Movement)
+                if(ae.statType == StatType.MoveSelf)
                 {
                     game.board.MoveCharacterFree(character, target);
+                }
+                else if(ae.statType == StatType.MoveTarget)
+                {
+                    //calculate the destination based on character / target and range.
+                    Tile ActiveTile = game.board.getTileFromLocation(character.x,character.y);
+                    GameCharacter targetChar = game.getCharacterFromTile(target);
+                    List<Tile> moveTargetList = game.board.getMoveTargetTileList(ActiveTile, target, ae.amount);
+                    if(moveTargetList.Count >0)
+                    {
+                        Tile moveTile = moveTargetList[moveTargetList.Count-1];
+                        game.board.MoveCharacterFree(targetChar,moveTile);
+                    }
                 }
                 else
                 {
