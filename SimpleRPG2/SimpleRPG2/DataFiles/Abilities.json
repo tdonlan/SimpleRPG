@@ -1,0 +1,1 @@
+﻿{"name":"Fireball","description":"Send a large ball of flame into a crowd of foes","ap":5,"uses":5,"range":20,"targetType":8,"tilePatternType":3,"activeEffects":[{"name":"Fireball","statType":1,"minAmount":10,"maxAmount":20,"duration":1}],"passiveEffects":null}
