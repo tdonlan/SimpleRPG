@@ -33,7 +33,7 @@ namespace SimpleRPG2
 
         public static Weapon getWeapon(Random r)
         {
-            Weapon w = new Weapon() {name="Long Sword",damage=6,type=ItemType.Weapon,actionPoints=5,activeEffects=null,passiveEffects=null };
+            Weapon w = new Weapon() {name="Long Sword",damage=10,type=ItemType.Weapon,actionPoints=2,activeEffects=null,passiveEffects=null };
             return w;
 
         }

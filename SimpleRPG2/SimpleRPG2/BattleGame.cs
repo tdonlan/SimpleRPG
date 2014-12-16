@@ -143,6 +143,7 @@ namespace SimpleRPG2
                 }
                 else
                 {
+                    CharacterKill(ActiveCharacter); 
                     NextTurn();
                 }
 
@@ -632,6 +633,16 @@ namespace SimpleRPG2
         private void EnemyAttack(GameCharacter enemy, GameCharacter player)
         {
             CombatHelper.Attack(enemy, player, battleLog, r);
+        }
+
+        public void CharacterKill(GameCharacter character)
+        {
+            battleLog.AddEntry(string.Format("{0} was killed", character.name));
+
+            Tile tempTile = board.getTileFromLocation(character.x,character.y);
+            board.EmptyTile(tempTile);
+            characterList.Remove(character);
+
         }
 
         private void LoseBattle()

@@ -101,10 +101,19 @@ namespace SimpleRPG2
 
                         game.battleLog.AddEntry(string.Format("{0} was healed for {1}", this.name, effect.amount));
                     }
+                    if(this.hp < 0)
+                    {
+                        Kill(game);
+                    }
                     break;
                 default:
                     break;
             }
+        }
+
+        private void Kill(BattleGame game)
+        {
+            game.CharacterKill(this);
         }
     }
 }

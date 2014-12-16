@@ -107,5 +107,25 @@ namespace SimpleRPG2
             }
             return retval;
         }
+
+        public static int RandFromStrRange(Random r, string range)
+        {
+            string[] strArray = range.Split('-');
+            if(strArray.Length == 2)
+            {
+                try
+                {
+                    return r.Next(Int32.Parse(strArray[0]), Int32.Parse(strArray[1]));
+                }
+                catch(Exception ex)
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
     }
 }

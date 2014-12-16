@@ -17,7 +17,7 @@ namespace SimpleRPG2
 
         public static GameCharacter getPlayerCharacter(Random r)
         {
-            GameCharacter retval =  new GameCharacter() {name="Warrior",displayChar='@',type=CharacterType.Player, ac = 10, attack = 5, totalHP = 10, hp = 5,ap=10,totalAP=10 };
+            GameCharacter retval =  new GameCharacter() {name="Warrior",displayChar='@',type=CharacterType.Player, ac = 10, attack = 50, totalHP = 50, hp = 50,ap=10,totalAP=10 };
         
             retval.inventory.Add(ItemFactory.getHealingPotion(r));
             retval.weapon = ItemFactory.getWeapon(r);
