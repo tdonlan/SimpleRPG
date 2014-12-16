@@ -87,5 +87,27 @@ namespace SimpleRPG2
 
 
         }
+
+        public static Ability getCharge()
+        {
+            ActiveEffect chargeEffect = new ActiveEffect() { name = "Charge", duration = 1, amount = 5, statType = StatType.Teleport };
+            ActiveEffect knockbackEffect = new ActiveEffect() { name = "Knockback", duration = 1, amount = 1, statType = StatType.Knockback };
+            ActiveEffect damageEffect = new ActiveEffect() { name = "ChargeDamage", duration = 1, amount = -10, statType = StatType.HitPoints };
+
+            Ability charge = new Ability()
+            {
+                name = "Charge",
+                description = "Charge in a straight line towards an enemy, causing damage",
+                ap = 5,
+                range = 5,
+                uses = 1,
+                targetType = AbilityTargetType.LOSTarget,
+                tilePatternType = TilePatternType.Single,
+                activeEffects = new List<ActiveEffect>() { knockbackEffect, chargeEffect, damageEffect },
+                passiveEffects = null,
+            };
+
+            return charge;
+        }
     }
 }

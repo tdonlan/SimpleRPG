@@ -83,7 +83,7 @@ namespace SimpleRPG2
                 {
                     if (ae.statType == StatType.Teleport)
                     {
-                        game.board.MoveCharacterFree(character, target);
+                        game.board.MoveCharacterFree(sourceCharacter, target); //for now, can only teleport self.
                     }
                     else if (ae.statType == StatType.Knockback) //move away from sourceCharacter
                     {

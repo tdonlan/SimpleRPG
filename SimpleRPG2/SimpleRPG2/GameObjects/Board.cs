@@ -233,7 +233,7 @@ namespace SimpleRPG2
             foreach(Point p in pointList)
             {
                 Tile tempTile = getTileFromPoint(p);
-                if(tempTile.empty)
+                if(tempTile != null && tempTile.empty)
                 {
                     retvalList.Add(tempTile);
                 }
