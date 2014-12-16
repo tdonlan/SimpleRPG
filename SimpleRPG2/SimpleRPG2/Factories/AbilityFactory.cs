@@ -109,5 +109,27 @@ namespace SimpleRPG2
 
             return charge;
         }
+
+        public static Ability getGrenade()
+        {
+            ActiveEffect explodeEffect = new ActiveEffect() { name = "Explode", duration = 1, amount = 2, statType = StatType.Explode };
+            ActiveEffect fireEffect = new ActiveEffect() { name = "Fire", duration = 1, amount = -5, statType = StatType.HitPoints };
+
+            Ability grenade = new Ability()
+            {
+                name = "Grenade",
+                description = "A grenade explodes, blasting back enemies and causing fire damage",
+                ap = 5,
+                range = 10,
+                uses = 1,
+                targetType = AbilityTargetType.LOSTarget,
+                tilePatternType = TilePatternType.NineSquare,
+                activeEffects = new List<ActiveEffect>() { fireEffect, explodeEffect },
+                passiveEffects =null,
+
+            };
+
+            return grenade;
+        }
     }
 }
