@@ -15,7 +15,7 @@ namespace SimpleRPG2
             var attackTarget= getAttackablePlayer(enemy,game);
             if (attackTarget != null)
             {
-                attackPlayer(enemy, attackTarget, game.battleLog, game.r);
+                attackPlayer(enemy, attackTarget, game);
             }
             else
             {
@@ -25,11 +25,11 @@ namespace SimpleRPG2
             
         }
 
-        private static void attackPlayer(GameCharacter enemy, GameCharacter player, BattleLog log, Random r)
+        private static void attackPlayer(GameCharacter enemy, GameCharacter player, BattleGame game)
         {
             if(enemy.SpendAP(enemy.weapon.actionPoints))
             {
-                CombatHelper.Attack(enemy, player, log, r);
+                CombatHelper.Attack(enemy, player, game);
             }
         }
 

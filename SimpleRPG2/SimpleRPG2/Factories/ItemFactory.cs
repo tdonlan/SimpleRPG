@@ -23,17 +23,17 @@ namespace SimpleRPG2
 
         public static ActiveEffect getActiveEffect(Random r)
         {
-            return new ActiveEffect() {name="Heal",amount=5,duration=1,statType=StatType.HitPoints };
+            return new ActiveEffect() {name="Heal",minAmount=5,maxAmount=10,duration=1,statType=StatType.HitPoints };
         }
 
         public static PassiveEffect getPassiveEffect(Random r)
         {
-            return new PassiveEffect() { name = "Regen", amount = 1, statType = StatType.HitPoints };
+            return new PassiveEffect() { name = "Regen", minAmount = 1, maxAmount=1, statType = StatType.HitPoints };
         }
 
         public static Weapon getWeapon(Random r)
         {
-            Weapon w = new Weapon() {name="Long Sword",damage=10,type=ItemType.Weapon,actionPoints=2,activeEffects=null,passiveEffects=null };
+            Weapon w = new Weapon() {name="Long Sword",minDamage=5,maxDamage=10, type=ItemType.Weapon,actionPoints=2,activeEffects=null,passiveEffects=null };
             return w;
 
         }

@@ -10,7 +10,7 @@ namespace SimpleRPG2
     {
         public static Ability getFireball()
         {
-            ActiveEffect fireballEffect = new ActiveEffect() { name = "Fireball", duration = 1, amount = -20, statType = StatType.HitPoints };
+            ActiveEffect fireballEffect = new ActiveEffect() { name = "Fireball", duration = 1, minAmount = 10,maxAmount=20, statType = StatType.Damage };
 
             Ability fireball = new Ability()
             {
@@ -30,7 +30,7 @@ namespace SimpleRPG2
 
         public static Ability getHeal()
         {
-            ActiveEffect healEffect = new ActiveEffect() { name = "Heal", duration = 1, amount = 10, statType = StatType.HitPoints };
+            ActiveEffect healEffect = new ActiveEffect() { name = "Heal", duration = 1, minAmount = 5,maxAmount=10, statType = StatType.Heal };
             Ability heal = new Ability()
             {
                 name = "Heal",
@@ -49,7 +49,7 @@ namespace SimpleRPG2
 
         public static Ability getTeleport()
         {
-            ActiveEffect teleportEffect = new ActiveEffect() { name = "Teleport", duration = 1, amount = 0, statType = StatType.Teleport };
+            ActiveEffect teleportEffect = new ActiveEffect() { name = "Teleport", duration = 1, minAmount = 0,maxAmount=0, statType = StatType.Teleport };
             Ability teleport = new Ability()
             {
                 name = "Teleport",
@@ -68,7 +68,7 @@ namespace SimpleRPG2
 
         public static Ability getKnockback()
         {
-            ActiveEffect knockbackEffect = new ActiveEffect() { name = "Knockback", duration = 1, amount = 1, statType = StatType.Knockback };
+            ActiveEffect knockbackEffect = new ActiveEffect() { name = "Knockback", duration = 1, minAmount = 1,maxAmount=1, statType = StatType.Knockback };
             Ability knockback = new Ability()
             {
                 name = "Knockback",
@@ -90,9 +90,9 @@ namespace SimpleRPG2
 
         public static Ability getCharge()
         {
-            ActiveEffect chargeEffect = new ActiveEffect() { name = "Charge", duration = 1, amount = 5, statType = StatType.Teleport };
-            ActiveEffect knockbackEffect = new ActiveEffect() { name = "Knockback", duration = 1, amount = 1, statType = StatType.Knockback };
-            ActiveEffect damageEffect = new ActiveEffect() { name = "ChargeDamage", duration = 1, amount = -10, statType = StatType.HitPoints };
+            ActiveEffect chargeEffect = new ActiveEffect() { name = "Charge", duration = 1, minAmount = 5,maxAmount=5, statType = StatType.Teleport };
+            ActiveEffect knockbackEffect = new ActiveEffect() { name = "Knockback", duration = 1, minAmount = 1,maxAmount=1, statType = StatType.Knockback };
+            ActiveEffect damageEffect = new ActiveEffect() { name = "ChargeDamage", duration = 1, minAmount = 10,maxAmount=20, statType = StatType.Damage };
 
             Ability charge = new Ability()
             {
@@ -112,8 +112,8 @@ namespace SimpleRPG2
 
         public static Ability getGrenade()
         {
-            ActiveEffect explodeEffect = new ActiveEffect() { name = "Explode", duration = 1, amount = 2, statType = StatType.Explode };
-            ActiveEffect fireEffect = new ActiveEffect() { name = "Fire", duration = 1, amount = -5, statType = StatType.HitPoints };
+            ActiveEffect explodeEffect = new ActiveEffect() { name = "Explode", duration = 1, minAmount = 2,maxAmount=3, statType = StatType.Explode };
+            ActiveEffect fireEffect = new ActiveEffect() { name = "Fire", duration = 1, minAmount = 5,maxAmount=10, statType = StatType.Damage };
 
             Ability grenade = new Ability()
             {

@@ -545,7 +545,7 @@ namespace SimpleRPG2
                 {
                     if (player.SpendAP(player.weapon.actionPoints))
                     {
-                        CombatHelper.Attack(player, enemy, battleLog, r);
+                        CombatHelper.Attack(player, enemy, this);
                     }
                 }
                 else
@@ -564,7 +564,7 @@ namespace SimpleRPG2
         {
             if (player.SpendAP(player.weapon.actionPoints))
             {
-                CombatHelper.Attack(player, enemy, battleLog, r);
+                CombatHelper.Attack(player, enemy, this);
             }
         }
 
@@ -632,7 +632,7 @@ namespace SimpleRPG2
         
         private void EnemyAttack(GameCharacter enemy, GameCharacter player)
         {
-            CombatHelper.Attack(enemy, player, battleLog, r);
+            CombatHelper.Attack(enemy, player, this);
         }
 
         public void CharacterKill(GameCharacter character)

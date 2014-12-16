@@ -10,11 +10,12 @@ namespace SimpleRPG2
     {
         public string name { get; set; }
         public StatType statType { get; set; }
-        public int amount { get; set; }
+        public int minAmount { get; set; }
+        public int maxAmount { get; set; }
 
         public override string ToString()
         {
-            return string.Format("{0} (Passive): {1} {2}", name, statType.ToString(), amount);
+            return string.Format("{0} (Passive): {1} {2}-{3}", name, statType.ToString(), minAmount,maxAmount);
         }
 
     }
@@ -23,12 +24,16 @@ namespace SimpleRPG2
     {
         public string name { get; set; }
         public StatType statType { get; set; }
-        public int amount { get; set; }
+
+        public int minAmount { get; set; }
+        public int maxAmount { get; set; }
+
         public int duration { get; set; }
+
 
         public override string ToString()
         {
-            return string.Format("{0} (Active): {1} {2} {3} turns", name, statType.ToString(), amount, duration);
+            return string.Format("{0} (Active): {1} {2}-{3} for {4} turns", name, statType.ToString(), minAmount, maxAmount, duration);
         }
     }
 

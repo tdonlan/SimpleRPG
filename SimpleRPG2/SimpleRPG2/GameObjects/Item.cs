@@ -44,12 +44,13 @@ namespace SimpleRPG2
 
     public class Weapon : Item
     {
-        public int damage { get; set; }
+        public int minDamage { get; set; }
+        public int maxDamage { get; set; }
         public int actionPoints { get; set; }
 
         public override string ToString()
         {
-            return string.Format("{0} dmg: {1} ap: {2}", name, damage,actionPoints);
+            return string.Format("{0} dmg: {1}-{2} ap: {3}", name, minDamage,maxDamage,actionPoints);
         }
 
     }

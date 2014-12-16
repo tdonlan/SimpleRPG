@@ -89,7 +89,8 @@ namespace SimpleRPG2
                     {
                         Tile sourceTile = game.board.getTileFromLocation(sourceCharacter.x, sourceCharacter.y);
                         Tile charTile = game.board.getTileFromLocation(character.x, character.y);
-                        List<Tile> moveTargetList = game.board.getMoveTargetTileList(sourceTile, charTile, ae.amount);
+                        List<Tile> moveTargetList = game.board.getMoveTargetTileList(sourceTile, charTile, ae.minAmount);
+
                         if (moveTargetList.Count > 0)
                         {
                             Tile moveTile = moveTargetList[moveTargetList.Count - 1];
@@ -99,7 +100,7 @@ namespace SimpleRPG2
                     else if(ae.statType == StatType.Explode) //move away from target
                     {
                         Tile charTile = game.board.getTileFromLocation(character.x, character.y);
-                        List<Tile> moveTargetList = game.board.getMoveTargetTileList(target, charTile, ae.amount);
+                        List<Tile> moveTargetList = game.board.getMoveTargetTileList(target, charTile, ae.minAmount);
                         if (moveTargetList.Count > 0)
                         {
                             Tile moveTile = moveTargetList[moveTargetList.Count - 1];

@@ -29,9 +29,10 @@ namespace SimpleRPG2
 
     public enum StatType
     {
-       
         Armor,
-        HitPoints,
+        Damage, 
+        Heal,
+        HitPoints, //temp buff to hitpoints
         Attack,
         Teleport, //move character to target
         Knockback, // move targets away from character

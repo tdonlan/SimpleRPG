@@ -93,25 +93,49 @@ namespace SimpleRPG2
         {
             switch(effect.statType)
             {
-                case StatType.HitPoints:
-                    this.hp += effect.amount;
-                    if(this.hp > this.totalHP)
-                    {
-                        this.hp = this.totalHP;
+                case StatType.Damage:
+                    this.Damage(game.r.Next(effect.minAmount, effect.maxAmount),game);
+                    break;
+                case StatType.Heal:
+                    this.Heal(game.r.Next(effect.minAmount, effect.maxAmount), game);
+                    break;
 
-                        game.battleLog.AddEntry(string.Format("{0} was healed for {1}", this.name, effect.amount));
-                    }
-                    if(this.hp < 0)
-                    {
-                        Kill(game);
-                    }
+
+                case StatType.HitPoints:
+                    //Deprecated
                     break;
                 default:
                     break;
             }
         }
 
-        private void Kill(BattleGame game)
+        public void Damage(int amount, BattleGame game)
+        {
+
+            game.battleLog.AddEntry(string.Format("{0} was hurt for {1}", this.name, amount));
+
+            this.hp -= amount;
+            if(this.hp < 0)
+            {
+                Kill(game);
+            }
+
+         
+        }
+
+        public void Heal(int amount, BattleGame game)
+        {
+            this.hp += amount;
+            if(this.hp > this.totalHP)
+            {
+                this.hp = this.totalHP;
+            }
+
+            game.battleLog.AddEntry(string.Format("{0} was healed for {1}", this.name, amount));
+
+        }
+
+        public void Kill(BattleGame game)
         {
             game.CharacterKill(this);
         }
