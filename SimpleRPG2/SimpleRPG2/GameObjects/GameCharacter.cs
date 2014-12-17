@@ -99,7 +99,8 @@ namespace SimpleRPG2
                 case StatType.Heal:
                     this.Heal(game.r.Next(effect.minAmount, effect.maxAmount), game);
                     break;
-
+                case StatType.ActionPoints:
+                    break;
 
                 case StatType.HitPoints:
                     //Deprecated

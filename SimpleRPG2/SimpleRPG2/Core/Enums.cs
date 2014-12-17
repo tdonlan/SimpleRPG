@@ -29,6 +29,7 @@ namespace SimpleRPG2
 
     public enum StatType
     {
+        ActionPoints,
         Armor,
         Damage, 
         Heal,

@@ -212,7 +212,8 @@ namespace SimpleRPG2
             switch(input)
             {
                 case 1:
-                    DisplayViewMenu();
+                    //DisplayViewMenu();
+                    DisplayViewMenu2();
                     break;
                 case 2:
                     DisplayMoveMenu();
@@ -268,6 +269,19 @@ namespace SimpleRPG2
             //Display the Character
             Console.Write(characterList[input - 1].ToString());
             Console.Write(">");
+            Console.ReadLine();
+            return;
+        }
+
+        private void DisplayViewMenu2()
+        {
+            List<string> displayCharList = new List<string>();
+            
+            foreach (var c in characterList)
+            {
+                Console.WriteLine(c.ToString());
+            }
+
             Console.ReadLine();
             return;
         }

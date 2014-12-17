@@ -131,5 +131,34 @@ namespace SimpleRPG2
 
             return grenade;
         }
+
+        public static Ability getHaste()
+        {
+            ActiveEffect hasteEffect = new ActiveEffect()
+            {
+                name = "Haste",
+                duration = 3,
+                minAmount = 5,
+                maxAmount = 5,
+                statType = StatType.ActionPoints
+            };
+
+            Ability haste = new Ability()
+            {
+                name = "Haste",
+                description = "Addition Action Points per turn",
+                ap = 1,
+                range = 1,
+                targetType = AbilityTargetType.SingleFriend,
+                tilePatternType = TilePatternType.Single,
+                uses = 1,
+                activeEffects = new List<ActiveEffect>() { hasteEffect},
+                passiveEffects=null
+
+
+            };
+
+            return haste;
+        }
     }
 }

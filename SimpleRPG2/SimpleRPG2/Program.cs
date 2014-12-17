@@ -10,10 +10,10 @@ namespace SimpleRPG2
     {
         static void Main(string[] args)
         {
-            //BattleGame bg = new BattleGame();
+            BattleGame bg = new BattleGame();
 
-            JsonTest.CreateJson();
-            JsonTest.ReadJson();
+            //JsonTest.CreateJson();
+            //JsonTest.ReadJson();
 
 
             //Test.testMenu();
