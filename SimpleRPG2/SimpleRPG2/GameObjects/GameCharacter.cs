@@ -15,9 +15,25 @@ namespace SimpleRPG2
         public int y { get; set; }
 
         public int ac { get; set; }
-        public int totalHP { get; set; }
+
+        private int _totalHP;
+        public int totalHP
+        {
+            get
+            {
+                return _totalHP + CoreHelper.getEffectAmount(new Random(), activeEffects, StatType.HitPoints);
+            }
+            set
+            {
+                _totalHP = value;
+            }
+        }
+
         public int hp { get; set; }
-        public int attack { get; set; }
+
+        private int _attack;
+        public int attack { get { return _attack + CoreHelper.getEffectAmount(new Random(), activeEffects, StatType.Attack); } set { _attack = value; } }
+
         public int ap { get; set; }
         public int totalAP { get; set; }
 
@@ -37,16 +53,7 @@ namespace SimpleRPG2
             abilityList = new List<Ability>();
         }
 
-        public override string ToString()
-        {
-            string retval = name + "\n";
-            retval += string.Format("AC: {0} HP: {1}/{2} Atk: {3} AP: {4}/{5}\n", ac, hp, totalHP, attack, ap,totalAP);
 
-            
-            retval += weapon.ToString() + "\n";
-
-            return retval;
-        }
 
         public bool SpendAP(int ap)
         {
@@ -99,12 +106,6 @@ namespace SimpleRPG2
                 case StatType.Heal:
                     this.Heal(game.r.Next(effect.minAmount, effect.maxAmount), game);
                     break;
-                case StatType.ActionPoints:
-                    break;
-
-                case StatType.HitPoints:
-                    //Deprecated
-                    break;
                 default:
                     break;
             }
@@ -139,6 +140,21 @@ namespace SimpleRPG2
         public void Kill(BattleGame game)
         {
             game.CharacterKill(this);
+        }
+
+
+        public override string ToString()
+        {
+            string retval = name + "\n";
+            retval += string.Format("AC: {0} HP: {1}/{2} Atk: {3} AP: {4}/{5}\n", ac, hp, totalHP, attack, ap, totalAP);
+
+            retval += weapon.ToString() + "\n";
+            foreach(var ae in activeEffects)
+            {
+                retval += ae.ToString() + "\n";
+            }
+
+            return retval;
         }
     }
 }

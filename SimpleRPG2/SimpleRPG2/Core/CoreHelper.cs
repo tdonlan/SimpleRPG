@@ -127,5 +127,18 @@ namespace SimpleRPG2
                 return 0;
             }
         }
+
+        public static int getEffectAmount(Random r, List<ActiveEffect> activeEffects, StatType stat )
+        {
+            int amount = 0;
+            foreach(var ae in activeEffects)
+            {
+                if(ae.statType == stat)
+                {
+                    amount += r.Next(ae.minAmount, ae.maxAmount);
+                }
+            }
+            return amount;
+        }
     }
 }

@@ -155,10 +155,21 @@ namespace SimpleRPG2
                 activeEffects = new List<ActiveEffect>() { hasteEffect},
                 passiveEffects=null
 
-
             };
 
             return haste;
+        }
+
+        public static Ability getShield()
+        {
+            ActiveEffect shieldEffect = new ActiveEffect() { name = "Shield", duration = 2, minAmount = 10, maxAmount = 10, statType = StatType.HitPoints };
+            ActiveEffect healEffect = new ActiveEffect() { name = "Heal", duration = 1, minAmount = 999, maxAmount = 999, statType = StatType.Heal };
+            Ability shield = new Ability() {name = "Shield",description="Summon a temporary shield to protect you"
+            ,activeEffects = new List<ActiveEffect>(){shieldEffect,healEffect},
+            passiveEffects=null,
+            ap=5,range=1,targetType=AbilityTargetType.Self,tilePatternType=TilePatternType.Single,uses=1};
+
+            return shield;
         }
     }
 }
