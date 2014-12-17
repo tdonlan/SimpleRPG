@@ -140,5 +140,15 @@ namespace SimpleRPG2
             }
             return amount;
         }
+
+        public static int getArmorAmount(List<Armor> equipment)
+        {
+            int amount = 0;
+            foreach(var a in equipment)
+            {
+                amount += a.armor;
+            }
+            return amount;
+        }
     }
 }

@@ -27,6 +27,17 @@ namespace SimpleRPG2
         Armor,
     }
 
+    public enum ArmorType
+    {
+        Head,
+        Chest,
+        Gloves,
+        Legs,
+        Boots,
+        Ring,
+        Trinket,
+    }
+
     public enum StatType
     {
         ActionPoints,

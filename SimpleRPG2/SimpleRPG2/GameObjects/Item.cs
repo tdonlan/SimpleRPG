@@ -58,6 +58,12 @@ namespace SimpleRPG2
     public class Armor : Item
     {
         public int armor { get; set; }
+        public ArmorType armorType { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} armor: {1} type: {2}", name, armor, armorType.ToString());
+        }
     }
 
    

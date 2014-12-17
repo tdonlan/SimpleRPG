@@ -14,7 +14,12 @@ namespace SimpleRPG2
         public int x { get; set; }
         public int y { get; set; }
 
-        public int ac { get; set; }
+        private int _ac;
+        public int ac
+        {
+            get { return _ac + CoreHelper.getArmorAmount(equippedArmor) + CoreHelper.getEffectAmount(new Random(), activeEffects, StatType.Armor); }
+            set { _ac = value; }
+        }
 
         private int _totalHP;
         public int totalHP
@@ -38,8 +43,9 @@ namespace SimpleRPG2
         public int totalAP { get; set; }
 
         public List<Item> inventory { get; set; }
+        public List<Armor> equippedArmor { get; set; }
         public Weapon weapon { get; set; }
-        public Armor armor { get; set; }
+     
 
         public List<ActiveEffect> activeEffects { get; set; }
         public List<PassiveEffect> passiveEffects { get; set; }
@@ -48,12 +54,11 @@ namespace SimpleRPG2
 
         public GameCharacter() {
             inventory = new List<Item>();
+            equippedArmor = new List<Armor>();
             activeEffects = new List<ActiveEffect>();
             passiveEffects = new List<PassiveEffect>();
             abilityList = new List<Ability>();
         }
-
-
 
         public bool SpendAP(int ap)
         {
@@ -79,6 +84,16 @@ namespace SimpleRPG2
             {
                 activeEffects.Add(a);
             }
+        }
+
+        public void AddPassiveEffect(PassiveEffect pe)
+        {
+            passiveEffects.Add(pe);
+        }
+
+        public void RemovePassiveEffect(PassiveEffect pe)
+        {
+            if (passiveEffects.Contains(pe)) { passiveEffects.Remove(pe); }
         }
 
         //Occurs once per turn
@@ -142,6 +157,47 @@ namespace SimpleRPG2
             game.CharacterKill(this);
         }
 
+        public void EquipArmor(Armor a)
+        {
+            var inventoryArmorList = from data in inventory
+                                     where data is Armor
+                                     select data;
+
+            if(inventory.Contains(a))
+            {
+                if(equippedArmor.FindAll(x =>x.armorType == a.armorType).Count == 0)
+                {
+                    inventory.Remove(a);
+                    equippedArmor.Add(a);
+                    if(a.passiveEffects != null)
+                    {
+                        foreach (var pe in a.passiveEffects)
+                        {
+                            AddPassiveEffect(pe);
+                        }
+                    }
+                    
+                }
+            }
+        }
+
+        public void RemoveArmor(Armor a)
+        {
+            if(equippedArmor.Contains(a))
+            {
+                equippedArmor.Remove(a);
+                inventory.Add(a);
+                if (a.passiveEffects != null)
+                {
+                    foreach (var pe in a.passiveEffects)
+                    {
+                        RemovePassiveEffect(pe);
+                    }
+                }
+               
+            }
+        }
+
 
         public override string ToString()
         {
@@ -149,9 +205,18 @@ namespace SimpleRPG2
             retval += string.Format("AC: {0} HP: {1}/{2} Atk: {3} AP: {4}/{5}\n", ac, hp, totalHP, attack, ap, totalAP);
 
             retval += weapon.ToString() + "\n";
+            foreach(var e in equippedArmor)
+            {
+                retval += e.ToString() + "\n";
+            }
+
             foreach(var ae in activeEffects)
             {
                 retval += ae.ToString() + "\n";
+            }
+            foreach(var pe in passiveEffects)
+            {
+                retval += pe.ToString() + "\n";
             }
 
             return retval;

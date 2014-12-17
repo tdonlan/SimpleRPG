@@ -20,6 +20,11 @@ namespace SimpleRPG2
             GameCharacter retval =  new GameCharacter() {name="Warrior",displayChar='@',type=CharacterType.Player, ac = 10, attack = 50, totalHP = 50, hp = 50,ap=10,totalAP=10 };
         
             retval.inventory.Add(ItemFactory.getHealingPotion(r));
+
+            Armor a = ItemFactory.getArmor(r);
+            retval.inventory.Add(a);
+            retval.EquipArmor(a);
+
             retval.weapon = ItemFactory.getWeapon(r);
 
             retval.abilityList.Add(AbilityFactory.getFireball());
@@ -29,6 +34,8 @@ namespace SimpleRPG2
             retval.abilityList.Add(AbilityFactory.getGrenade());
             retval.abilityList.Add(AbilityFactory.getShield());
             retval.abilityList.Add(AbilityFactory.getRage());
+
+           
 
             return retval;
         }

@@ -40,7 +40,7 @@ namespace SimpleRPG2
 
         public static Armor getArmor(Random r)
         {
-            Armor a = new Armor() {name="Chain Mail",activeEffects=null,armor=10,passiveEffects=null,type=ItemType.Armor };
+            Armor a = new Armor() {name="Chain Mail",activeEffects=null,armor=10,passiveEffects=null,type=ItemType.Armor, armorType=ArmorType.Chest };
             return a;
         }
     }
