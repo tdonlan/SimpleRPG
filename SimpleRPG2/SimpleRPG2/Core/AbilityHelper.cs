@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Newtonsoft.Json;
+
 namespace SimpleRPG2
 {
     public class AbilityHelper
@@ -109,7 +111,7 @@ namespace SimpleRPG2
                     }
                     else
                     {
-                        character.AddActiveEffect(ae, game);
+                        character.AddActiveEffect(cloneActiveEffect(ae), game);
                     }
                 }
             }
@@ -214,30 +216,48 @@ namespace SimpleRPG2
 
         public static bool UseAbility(GameCharacter character, Ability ability, Tile target, BattleGame game)
         {
-            switch (ability.targetType)
+            if (ability.uses > 0)
             {
-                case AbilityTargetType.Self:
-                    return UseAbilitySelf(character, ability, target, game);
-                case AbilityTargetType.SingleFriend:
-                    return UseAbilitySingleFriend(character, ability, target, game);
-                case AbilityTargetType.SingleFoe:
-                    return UseAbilitySingleFoe(character, ability, target, game);
-                case AbilityTargetType.AllFriends:
-                    return UseAbilityAllFriends(character, ability, target, game);
-                case AbilityTargetType.AllFoes:
-                    return UseAbilityAllFoes(character, ability, target, game);
-                case AbilityTargetType.PointEmpty:
-                    return UseAbilityPointEmpty(character, ability, target, game);
-                case AbilityTargetType.PointTarget:
-                    return UseAbilityPoint(character, ability, target, game);
-                case AbilityTargetType.LOSEmpty:
-                    return UseAbilityLOSEmpty(character, ability, target, game);
-                case AbilityTargetType.LOSTarget:
-                    return UseAbilityLOS(character, ability, target, game);
-                default:
-                    return false;
+                ability.uses--;
+
+                switch (ability.targetType)
+                {
+                    case AbilityTargetType.Self:
+                        return UseAbilitySelf(character, ability, target, game);
+                    case AbilityTargetType.SingleFriend:
+                        return UseAbilitySingleFriend(character, ability, target, game);
+                    case AbilityTargetType.SingleFoe:
+                        return UseAbilitySingleFoe(character, ability, target, game);
+                    case AbilityTargetType.AllFriends:
+                        return UseAbilityAllFriends(character, ability, target, game);
+                    case AbilityTargetType.AllFoes:
+                        return UseAbilityAllFoes(character, ability, target, game);
+                    case AbilityTargetType.PointEmpty:
+                        return UseAbilityPointEmpty(character, ability, target, game);
+                    case AbilityTargetType.PointTarget:
+                        return UseAbilityPoint(character, ability, target, game);
+                    case AbilityTargetType.LOSEmpty:
+                        return UseAbilityLOSEmpty(character, ability, target, game);
+                    case AbilityTargetType.LOSTarget:
+                        return UseAbilityLOS(character, ability, target, game);
+                    default:
+                        return false;
+                }
             }
+            return false;
         }
+
+        public static Ability cloneAbility(Ability a)
+        {
+            return JsonConvert.DeserializeObject<Ability>(JsonConvert.SerializeObject(a));
+        }
+
+
+        public static ActiveEffect cloneActiveEffect(ActiveEffect ae)
+        {
+            return JsonConvert.DeserializeObject<ActiveEffect>(JsonConvert.SerializeObject(ae));
+        }
+        
 
     }
 }

@@ -28,6 +28,7 @@ namespace SimpleRPG2
             retval.abilityList.Add(AbilityFactory.getCharge());
             retval.abilityList.Add(AbilityFactory.getGrenade());
             retval.abilityList.Add(AbilityFactory.getShield());
+            retval.abilityList.Add(AbilityFactory.getRage());
 
             return retval;
         }

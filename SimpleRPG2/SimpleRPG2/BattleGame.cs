@@ -581,6 +581,9 @@ namespace SimpleRPG2
                 CombatHelper.Attack(player, enemy, this);
             }
         }
+        
+        
+        //Abstract this to a helper
 
         public void UseItem(GameCharacter character, UsableItem item)
         {

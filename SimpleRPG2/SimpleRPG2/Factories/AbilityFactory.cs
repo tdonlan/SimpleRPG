@@ -171,5 +171,16 @@ namespace SimpleRPG2
 
             return shield;
         }
+
+        public static Ability getRage()
+        {
+            ActiveEffect rageEffect = new ActiveEffect() { name = "Rage", duration = 2, minAmount = 5, maxAmount = 5, statType = StatType.Attack };
+
+            Ability rage = new Ability() { name = "Rage", description = "Attack with a fury", uses = 1, ap = 5, activeEffects = new List<ActiveEffect>() { rageEffect}
+            ,passiveEffects=null,range=1,targetType=AbilityTargetType.Self,tilePatternType=TilePatternType.Single};
+
+            return rage;
+        }
+
     }
 }
