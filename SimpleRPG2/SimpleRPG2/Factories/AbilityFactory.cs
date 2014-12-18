@@ -176,11 +176,60 @@ namespace SimpleRPG2
         {
             ActiveEffect rageEffect = new ActiveEffect() { name = "Rage", duration = 2, minAmount = 5, maxAmount = 5, statType = StatType.Attack };
 
-            Ability rage = new Ability() { name = "Rage", description = "Attack with a fury", uses = 1, ap = 5, activeEffects = new List<ActiveEffect>() { rageEffect}
-            ,passiveEffects=null,range=1,targetType=AbilityTargetType.Self,tilePatternType=TilePatternType.Single};
+            Ability rage = new Ability()
+            {
+                name = "Rage",
+                description = "Attack with a fury",
+                uses = 1,
+                ap = 5,
+                activeEffects = new List<ActiveEffect>() { rageEffect },
+                passiveEffects = null,
+                range = 1,
+                targetType = AbilityTargetType.Self,
+                tilePatternType = TilePatternType.Single
+            };
 
             return rage;
         }
+
+        public static Ability getWeb()
+        {
+            ActiveEffect webEffect = new ActiveEffect() { name = "Web", duration = 99, minAmount = 0, maxAmount = 0, statType = StatType.Stuck };
+            Ability web = new Ability()
+            {
+                name = "Web",
+                description = "Send sticky web to trap a target and prevent movement",
+                uses = 5,
+                ap = 5,
+                activeEffects = new List<ActiveEffect>() { webEffect },
+                passiveEffects = null,
+                range = 10,
+                targetType = AbilityTargetType.LOSTarget,
+                tilePatternType = TilePatternType.NineSquare
+            };
+
+            return web;
+        }
+
+        public static Ability getDispellMagic()
+        {
+            ActiveEffect dispellEffect = new ActiveEffect() { name = "Dispell", duration = 1, minAmount = 1, maxAmount = 1, statType = StatType.Dispell };
+            Ability dispell = new Ability()
+            {
+                name = "Dispell",
+                description = "Remove 1 active effect from target",
+                uses = 10,
+                ap = 5,
+                activeEffects = new List<ActiveEffect>() { dispellEffect },
+                passiveEffects = null,
+                range = 5,
+                targetType = AbilityTargetType.PointTarget,
+                tilePatternType = TilePatternType.Single,
+            };
+
+            return dispell;
+        }
+
 
     }
 }

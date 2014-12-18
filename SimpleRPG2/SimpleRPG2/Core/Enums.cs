@@ -49,6 +49,8 @@ namespace SimpleRPG2
         Teleport, //move character to target
         Knockback, // move targets away from character
         Explode, //move characters away from target
+        Stuck, //character cannot move
+        Dispell, //remove active effects
        
     }
 

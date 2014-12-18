@@ -96,6 +96,15 @@ namespace SimpleRPG2
             if (passiveEffects.Contains(pe)) { passiveEffects.Remove(pe); }
         }
 
+        public void RemoveTopActiveEffects(int num)
+        {
+            if(num > activeEffects.Count)
+            {
+                num = activeEffects.Count;
+            }
+            activeEffects.RemoveRange(0, num);
+        }
+
         //Occurs once per turn
         public void RunActiveEffects(BattleGame game)
         {
@@ -120,6 +129,9 @@ namespace SimpleRPG2
                     break;
                 case StatType.Heal:
                     this.Heal(game.r.Next(effect.minAmount, effect.maxAmount), game);
+                    break;
+                case StatType.Dispell:
+                    RemoveTopActiveEffects(game.r.Next(effect.minAmount, effect.maxAmount));
                     break;
                 default:
                     break;

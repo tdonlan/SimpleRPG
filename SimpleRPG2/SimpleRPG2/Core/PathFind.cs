@@ -8,7 +8,7 @@ namespace SimpleRPG2
 {
     public class PathFind
     {
-
+        
         public static List<Point> Pathfind(Board board, int x, int y, int x2, int y2)
         {
 

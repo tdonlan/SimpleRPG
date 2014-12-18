@@ -150,5 +150,25 @@ namespace SimpleRPG2
             }
             return amount;
         }
+
+        public static bool checkEffect(List<ActiveEffect> activeList, List<PassiveEffect> passiveList, StatType statType)
+        {
+            bool retval = false;
+
+            var aeCount = (from data in activeList
+                           where data.statType == statType
+                           select data).Count();
+
+            var peCount = (from data in passiveList
+                           where data.statType == statType
+                           select data).Count();
+
+            if (aeCount > 0 || peCount > 0)
+            {
+                retval = true;
+            }
+
+            return retval;
+        }
     }
 }

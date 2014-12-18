@@ -119,12 +119,14 @@ namespace SimpleRPG2
              {
                  if (Destination.empty)
                  {
-                     EmptyTile(board[gc.x, gc.y]);
-                     FillTile(gc, Destination);
+                     if (!CoreHelper.checkEffect(gc.activeEffects, gc.passiveEffects, StatType.Stuck))
+                     {
+                         EmptyTile(board[gc.x, gc.y]);
+                         FillTile(gc, Destination);
 
-                     retval = true;
+                         retval = true;
+                     }
                  }
-
              }
              return retval;
         }
@@ -136,14 +138,17 @@ namespace SimpleRPG2
             {
                 if (Destination.empty)
                 {
-                    //Use Actionpoints to Move
-                    Tile curTile = getTileFromLocation(gc.x, gc.y);
-                    if(gc.SpendAP(getTileDistance(curTile,Destination)))
-                    { 
-                        EmptyTile(board[gc.x, gc.y]);
-                        FillTile(gc, Destination);
+                    if (!CoreHelper.checkEffect(gc.activeEffects, gc.passiveEffects, StatType.Stuck))
+                    {
+                        //Use Actionpoints to Move
+                        Tile curTile = getTileFromLocation(gc.x, gc.y);
+                        if (gc.SpendAP(getTileDistance(curTile, Destination)))
+                        {
+                            EmptyTile(board[gc.x, gc.y]);
+                            FillTile(gc, Destination);
 
-                        retval = true;
+                            retval = true;
+                        }
                     }
                 }
             }
