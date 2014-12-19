@@ -85,6 +85,8 @@ namespace SimpleRPG2
             return input;
         }
 
+       
+
         public static Point parseStringPoint(string pt)
         {
             Point retval = null;
@@ -108,6 +110,7 @@ namespace SimpleRPG2
             return retval;
         }
 
+        //Not used
         public static int RandFromStrRange(Random r, string range)
         {
             string[] strArray = range.Split('-');

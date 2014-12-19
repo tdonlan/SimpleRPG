@@ -207,7 +207,7 @@ namespace SimpleRPG2
 
             List<string> menu = new List<string>(){"1. View","2. Move",
                 "3. Move To","4. Attack", "5. Ranged Attack","6. Use Item",
-                "7. Use Ability", "8. End Turn", "9. Refresh"};
+                "7. Use Ability", "8. Equipment", "9. End Turn", "10. Refresh"};
             int input = CoreHelper.displayMenuGetInt(menu);
             switch(input)
             {
@@ -239,15 +239,137 @@ namespace SimpleRPG2
                     DisplayAbilityMenu();
                     isAction = true;
                     break;
-
                 case 8:
+                    DisplayEquipmentMenu();
+                    break;
+
+                case 9:
                     PlayerSkip();
                     break;
-                case 9:
+                case 10:
                     break;
                 default: break;
             }
             return isAction;
+        }
+
+        private void DisplayEquipmentMenu()
+        {
+            List<string> equipStrMenu = new List<string>();
+            int counter = 1;
+            equipStrMenu.Add(string.Format("{0}. {1}", counter, ActiveCharacter.weapon.ToString()));
+            counter++;
+
+
+            List<ArmorType> armorTypeList = new List<ArmorType>();
+
+
+            foreach (var a in Enum.GetValues(typeof(ArmorType)))
+            {
+                armorTypeList.Add((ArmorType)a);
+
+                Armor tempArmor = ActiveCharacter.getArmorInSlot((ArmorType)a);
+                if(tempArmor != null)
+                {
+                    equipStrMenu.Add(string.Format("{0}. {1}", counter, tempArmor.ToString()));
+                }
+                else
+                {
+                    equipStrMenu.Add(string.Format("{0}. {1}", counter, a.ToString()));
+                }
+                counter++;
+            }
+
+            equipStrMenu.Add(string.Format("{0}. Back", counter));
+
+            int index = CoreHelper.displayMenuGetInt(equipStrMenu);
+            if(index != counter)
+            {
+                if(index == 1)
+                {
+                    DisplayWeaponsMenu();
+                }
+                else
+                {
+                    DisplayArmorMenu(armorTypeList[index - 2]);
+                }
+            }
+            return;
+
+        }
+
+        private void DisplayArmorMenu(ArmorType armorType)
+        {
+            Console.WriteLine(armorType.ToString());
+
+            Armor currentArmor = ActiveCharacter.getArmorInSlot(armorType);
+            if (currentArmor != null)
+            {
+                Console.WriteLine(currentArmor.ToString());
+            }
+            
+            var armorList = from data in ActiveCharacter.inventory
+                           where data.type == ItemType.Armor 
+                           select data;
+
+            var armorTypeList = (from Armor data in armorList
+                                 where data.armorType == armorType
+                                 select data).ToList();
+
+
+            List<string> armorStrList = new List<string>();
+            int counter = 1;
+            foreach (var w in armorTypeList)
+            {
+                armorStrList.Add(string.Format("{0}. {1}", counter, w.ToString()));
+                counter++;
+            }
+
+            armorStrList.Add(string.Format("{0}. Back", counter));
+
+            int armorIndex = CoreHelper.displayMenuGetInt(armorStrList);
+            if (armorIndex != counter)
+            {
+                ActiveCharacter.RemoveArmorInSlot(armorType);
+                ActiveCharacter.EquipArmor(armorTypeList[armorIndex - 1]);
+            }
+
+            return;
+
+        }
+
+        private void DisplayWeaponsMenu()
+        {
+             Console.WriteLine("Weapons");
+            //Current Weapon
+             if (ActiveCharacter.weapon != null)
+             {
+                 Console.WriteLine(ActiveCharacter.weapon.ToString());
+             }
+            //Available Weps
+             var wepList = (from data in ActiveCharacter.inventory
+                           where data.type == ItemType.Weapon
+                           select data).ToList();
+
+             List<string> wepStrList = new List<string>();
+            int counter = 1;
+            foreach(var w in wepList)
+            {
+                wepStrList.Add(string.Format("{0}. {1}", counter, w.ToString()));
+                counter++;
+            }
+
+            wepStrList.Add(string.Format("{0}. Back", counter));
+
+            int wepIndex = CoreHelper.displayMenuGetInt(wepStrList);
+            if(wepIndex != counter)
+            {
+                ActiveCharacter.RemoveWeapon(ActiveCharacter.weapon);
+                ActiveCharacter.EquipWeapon((Weapon)wepList[wepIndex - 1]);
+            }
+
+            return;
+            
         }
 
         private void DisplayViewMenu()

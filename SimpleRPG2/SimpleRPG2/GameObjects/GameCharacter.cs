@@ -169,11 +169,50 @@ namespace SimpleRPG2
             game.CharacterKill(this);
         }
 
+        public void EquipWeapon(Weapon w)
+        {
+            if(inventory.Contains(w))
+            {
+                inventory.Remove(w);
+                this.weapon = w;
+                if (w.passiveEffects != null)
+                {
+                    foreach (var pe in w.passiveEffects)
+                    {
+                        AddPassiveEffect(pe);
+                    }
+                }
+            }
+        }
+
+
+        public void RemoveWeapon(Weapon w)
+        {
+            if(w != null)
+            {
+                if(weapon == w)
+                {
+                    weapon = null;
+
+                    inventory.Add(w);
+                 
+                    if (w.passiveEffects != null)
+                    {
+                        foreach (var pe in w.passiveEffects)
+                        {
+                            RemovePassiveEffect(pe);
+                        }
+                    }
+                }
+            }
+        }
+
         public void EquipArmor(Armor a)
         {
-            var inventoryArmorList = from data in inventory
-                                     where data is Armor
-                                     select data;
+
+            //var inventoryArmorList = from data in inventory
+            //                         where data is Armor
+            //                         select data;
 
             if(inventory.Contains(a))
             {
@@ -192,6 +231,28 @@ namespace SimpleRPG2
                 }
             }
         }
+
+        public void RemoveArmorInSlot(ArmorType type)
+        {
+            var armor = (from data in equippedArmor
+                         where data.armorType == type
+                         select data).FirstOrDefault();
+
+            if(armor != null)
+            {
+                RemoveArmor(armor);
+            }
+        }
+
+        public Armor getArmorInSlot(ArmorType type)
+        {
+            var armor = (from data in equippedArmor
+                         where data.armorType == type
+                         select data).FirstOrDefault();
+
+            return armor;
+        }
+
 
         public void RemoveArmor(Armor a)
         {

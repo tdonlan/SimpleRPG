@@ -11,7 +11,7 @@ namespace SimpleRPG2
         public static GameCharacter getEnemy(Random r)
         {
             GameCharacter retval = new GameCharacter() {name="Goblin",displayChar='G',type=CharacterType.Enemy, ac = 10, attack = 5, totalHP = 10, hp = 10, ap=10, totalAP=10 };
-            retval.weapon = ItemFactory.getWeapon(r);
+            retval.weapon = ItemFactory.getLongsword(r);
             return retval;
         }
 
@@ -21,12 +21,22 @@ namespace SimpleRPG2
         
             retval.inventory.Add(ItemFactory.getHealingPotion(r));
 
-            Armor a = ItemFactory.getArmor(r);
-            retval.inventory.Add(a);
-            retval.EquipArmor(a);
 
-            retval.weapon = ItemFactory.getWeapon(r);
+            //Weapons
+            retval.weapon = ItemFactory.getLongsword(r);
 
+            retval.inventory.Add(ItemFactory.getDagger(r));
+            retval.inventory.Add(ItemFactory.getBattleAxe(r));
+
+            //Armor
+            retval.inventory.Add(ItemFactory.getLeatherChest(r));
+            retval.inventory.Add(ItemFactory.getChainmail(r));
+            retval.inventory.Add(ItemFactory.getGreathelm(r));
+            retval.inventory.Add(ItemFactory.getCap(r));
+            retval.inventory.Add(ItemFactory.getAttackRing(r));
+            retval.inventory.Add(ItemFactory.getRegenRing(r));
+
+            //Abilities
             /*
             retval.abilityList.Add(AbilityFactory.getFireball());
           
