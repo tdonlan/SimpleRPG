@@ -59,6 +59,13 @@ namespace SimpleRPG2
         {
 
             var tileAOEList = game.board.getTileListFromPattern(target, ability.tilePatternType);
+
+            //draw AOE effect
+            foreach (var t in tileAOEList)
+            {
+                game.board.AddTempChar(t, '*');
+            }
+
             var charAOEList = game.getCharactersFromTileList(tileAOEList);
 
             return UseAbilityOnCharList(character,target, ability, charAOEList, game);
@@ -67,6 +74,11 @@ namespace SimpleRPG2
 
         private static bool UseAbilityOnCharList(GameCharacter sourceCharacter, Tile target, Ability ability, List<GameCharacter> characterList, BattleGame game)
         {
+
+            //Draw Temp Character
+             game.board.AddTempChar(target, 'X');
+            
+
             //special conditions if we're doing something on sourceCharacter
             if(characterList.Count ==0)
             {

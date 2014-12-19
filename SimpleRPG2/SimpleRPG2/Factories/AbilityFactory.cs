@@ -230,6 +230,39 @@ namespace SimpleRPG2
             return dispell;
         }
 
+        public static Ability getSlow()
+        {
+            ActiveEffect slowEffect = new ActiveEffect() { name="Slow",duration=2,minAmount=-5,maxAmount=-5,statType = StatType.ActionPoints};
+
+            Ability slow = new Ability()
+            {
+                name = "Slow",
+                description = "Cause slow by reducing Action Points",
+                activeEffects = new List<ActiveEffect>() { slowEffect },
+                ap = 5,
+                passiveEffects = null,
+                range = 5,
+                targetType = AbilityTargetType.SingleFoe,
+                tilePatternType = TilePatternType.Single,
+                uses = 5
+            };
+
+            return slow;
+        }
+
+        public static Ability getStun()
+        {
+            ActiveEffect stunEffect = new ActiveEffect() { name = "Stun", duration = 5, minAmount = 0, maxAmount = 0, statType = StatType.Stun };
+            Ability stun = new Ability()
+            {
+                name = "Stun",
+                description = "Prohibit any action by the character",
+                activeEffects = new List<ActiveEffect>() { stunEffect},
+                ap=5,passiveEffects=null,range=10,targetType=AbilityTargetType.SingleFoe,
+                tilePatternType=TilePatternType.Single,uses=5
+            };
+            return stun;
+        }
 
     }
 }

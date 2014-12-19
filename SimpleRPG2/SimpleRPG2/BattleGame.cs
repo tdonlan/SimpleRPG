@@ -536,49 +536,59 @@ namespace SimpleRPG2
 
         private bool PlayerMove(GameCharacter player, int x, int y)
         {
-            return board.MoveCharacter(player, board.getTileFromLocation(x, y));
+            if (!CoreHelper.checkEffect(player.activeEffects, player.passiveEffects, StatType.Stun))
+            {
+                return board.MoveCharacter(player, board.getTileFromLocation(x, y));
+            }
+            return false;
         }
 
         private void PlayerRangedAttack(GameCharacter player, Tile destination)
         {
-            GameCharacter enemy = getCharacterFromTile(destination);
-
-            if (enemy != null)
+            if (!CoreHelper.checkEffect(player.activeEffects, player.passiveEffects, StatType.Stun))
             {
+                GameCharacter enemy = getCharacterFromTile(destination);
 
-                List<Tile> tileLOSList = board.getBoardLOS(ActiveTile, destination);
-
-        
-                foreach(var t in tileLOSList)
+                if (enemy != null)
                 {
-                    board.AddTempChar(t, '*');
-                }
-               
 
-                if (tileLOSList[tileLOSList.Count - 1] == destination)
-                {
-                    if (player.SpendAP(player.weapon.actionPoints))
+                    List<Tile> tileLOSList = board.getBoardLOS(ActiveTile, destination);
+
+
+                    foreach (var t in tileLOSList)
                     {
-                        CombatHelper.Attack(player, enemy, this);
+                        board.AddTempChar(t, '*');
                     }
-                }
-                else
-                {
-                    string path = "";
-                    foreach (var p in tileLOSList)
+
+
+                    if (tileLOSList[tileLOSList.Count - 1] == destination)
                     {
-                        path += p.ToString() + " ";
+                        if (player.SpendAP(player.weapon.actionPoints))
+                        {
+                            CombatHelper.Attack(player, enemy, this);
+                        }
                     }
-                    battleLog.AddEntry("Ranged attack failed. Path: " + path);
+                    else
+                    {
+                        string path = "";
+                        foreach (var p in tileLOSList)
+                        {
+                            path += p.ToString() + " ";
+                        }
+                        battleLog.AddEntry("Ranged attack failed. Path: " + path);
+                    }
                 }
             }
         }
 
         private void PlayerAttack(GameCharacter player, GameCharacter enemy)
         {
-            if (player.SpendAP(player.weapon.actionPoints))
+            if (!CoreHelper.checkEffect(player.activeEffects, player.passiveEffects, StatType.Stun))
             {
-                CombatHelper.Attack(player, enemy, this);
+                if (player.SpendAP(player.weapon.actionPoints))
+                {
+                    CombatHelper.Attack(player, enemy, this);
+                }
             }
         }
         
@@ -587,39 +597,46 @@ namespace SimpleRPG2
 
         public void UseItem(GameCharacter character, UsableItem item)
         {
-            if(character.SpendAP(item.actionPoints))
-            {
-                item.uses--;
-                if(item.uses <=0)
-                {
-                    //should this logic be here?
-                    ActiveCharacter.inventory.Remove(item);
-                }
-                foreach(var a in item.activeEffects)
-                {
-                    character.AddActiveEffect(a,this);
-                }
 
-                battleLog.AddEntry(string.Format("{0} used item {1}", character.name, item.name));
-            }
-            else
+            if (!CoreHelper.checkEffect(character.activeEffects, character.passiveEffects, StatType.Stun))
             {
-                battleLog.AddEntry(string.Format("{0} was unable to use item {1}",character.name, item.name));
+                if (character.SpendAP(item.actionPoints))
+                {
+                    item.uses--;
+                    if (item.uses <= 0)
+                    {
+                        //should this logic be here?
+                        ActiveCharacter.inventory.Remove(item);
+                    }
+                    foreach (var a in item.activeEffects)
+                    {
+                        character.AddActiveEffect(a, this);
+                    }
+
+                    battleLog.AddEntry(string.Format("{0} used item {1}", character.name, item.name));
+                }
+                else
+                {
+                    battleLog.AddEntry(string.Format("{0} was unable to use item {1}", character.name, item.name));
+                }
             }
 
         }
 
         public void UseAbility(GameCharacter character, Ability ability, Tile target)
         {
-            if(character.abilityList.Contains(ability))
+            if (!CoreHelper.checkEffect(character.activeEffects, character.passiveEffects, StatType.Stun))
             {
-                if(AbilityHelper.UseAbility(character, ability, target, this))
+                if (character.abilityList.Contains(ability))
                 {
-                    battleLog.AddEntry(string.Format("{0} used {1}",character.name,ability.name));
-                }
-                else
-                {
-                    battleLog.AddEntry(string.Format("{0} failed to use {1}", character.name, ability.name));
+                    if (AbilityHelper.UseAbility(character, ability, target, this))
+                    {
+                        battleLog.AddEntry(string.Format("{0} used {1}", character.name, ability.name));
+                    }
+                    else
+                    {
+                        battleLog.AddEntry(string.Format("{0} failed to use {1}", character.name, ability.name));
+                    }
                 }
             }
         }
@@ -628,7 +645,11 @@ namespace SimpleRPG2
         //enemy AI
         private void RunEnemyTurn()
         {
-            AI.attackNearestPlayer(ActiveCharacter, this);
+            if(!CoreHelper.checkEffect(ActiveCharacter.activeEffects,ActiveCharacter.passiveEffects,StatType.Stun))
+            { 
+                AI.attackNearestPlayer(ActiveCharacter, this); 
+            }
+
             NextTurn();
 
             //EnemySkip();

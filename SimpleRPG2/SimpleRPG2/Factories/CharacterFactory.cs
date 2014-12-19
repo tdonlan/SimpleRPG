@@ -38,6 +38,7 @@ namespace SimpleRPG2
             */
             retval.abilityList.Add(AbilityFactory.getWeb());
             retval.abilityList.Add(AbilityFactory.getDispellMagic());
+            retval.abilityList.Add(AbilityFactory.getStun());
            
 
             return retval;

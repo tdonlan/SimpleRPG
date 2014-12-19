@@ -51,6 +51,7 @@ namespace SimpleRPG2
         Explode, //move characters away from target
         Stuck, //character cannot move
         Dispell, //remove active effects
+        Stun, //player can't do anything
        
     }
 
