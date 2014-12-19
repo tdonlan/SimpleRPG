@@ -8,6 +8,7 @@ namespace SimpleRPG2
 {
     public class BattleGame
     {
+        public GameData gameData;
       
         public Board board;
         public List<GameCharacter> characterList;
@@ -38,6 +39,10 @@ namespace SimpleRPG2
 
         public BattleGame()
         {
+            //Load Game Data
+            gameData = new GameData();
+
+
             r = new Random();
             battleLog = new BattleLog();
 

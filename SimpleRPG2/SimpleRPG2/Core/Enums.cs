@@ -95,5 +95,13 @@ namespace SimpleRPG2
         LOSTarget,
     }
 
+    public enum MasterListType
+    {
+        Abilities,
+        Items,
+        Characters,
+        Maps
+    }
+
 }
 

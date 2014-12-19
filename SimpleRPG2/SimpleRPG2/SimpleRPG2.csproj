@@ -61,6 +61,7 @@
     <Compile Include="Core\Enums.cs" />
     <Compile Include="GameObjects\Effect.cs" />
     <Compile Include="GameObjects\GameCharacter.cs" />
+    <Compile Include="GameObjects\GameData.cs" />
     <Compile Include="GameObjects\Item.cs" />
     <Compile Include="Factories\ItemFactory.cs" />
     <Compile Include="Factories\PatternFactory.cs" />
@@ -73,7 +74,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="ClassDiagram1.cd" />
-    <None Include="DataFiles\Abilities.json" />
+    <None Include="DataFiles\Abilities.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="DataFiles\manifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -14,6 +14,7 @@ namespace SimpleRPG2
 
             //JsonTest.CreateJson();
             //JsonTest.ReadJson();
+            //JsonTest.WriteJson();
 
 
             //Test.testMenu();
