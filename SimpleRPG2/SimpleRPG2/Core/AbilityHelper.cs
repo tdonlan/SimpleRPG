@@ -15,7 +15,7 @@ namespace SimpleRPG2
             Tile ActiveTile = game.board.getTileFromLocation(character.x, character.y);
             var tileLOSList = game.board.getBoardLOS(ActiveTile, target);
 
-            if (tileLOSList[tileLOSList.Count - 1] == target)
+            if (tileLOSList.Count <= ability.range && tileLOSList[tileLOSList.Count - 1] == target)
             {
                 if (character.SpendAP(ability.ap))
                 {
@@ -34,21 +34,7 @@ namespace SimpleRPG2
         {
             if (target.empty)
             {
-                Tile ActiveTile = game.board.getTileFromLocation(character.x, character.y);
-                var tileLOSList = game.board.getBoardLOS(ActiveTile, target);
-
-                if (tileLOSList[tileLOSList.Count - 1] == target)
-                {
-                    if (character.SpendAP(ability.ap))
-                    {
-                        return UseAbilityAOEHelper(character, ability, target, game);
-                    }
-                    return false;
-                }
-                else
-                {
-                    return false;
-                }
+                return UseAbilityLOS(character, ability, target, game);
             }
 
             return false;
@@ -133,9 +119,16 @@ namespace SimpleRPG2
 
         private static bool UseAbilityPoint(GameCharacter character, Ability ability, Tile target, BattleGame game)
         {
-            if (character.SpendAP(ability.ap))
+            Tile ActiveTile = game.board.getTileFromLocation(character.x, character.y);
+
+            int dist = PlotLine.GetPointsOnLine(character.x, character.y, target.x, target.y).Count();
+
+            if(dist <= ability.range)
             {
-                return UseAbilityAOEHelper(character, ability, target, game);
+                if (character.SpendAP(ability.ap))
+                {
+                    return UseAbilityAOEHelper(character, ability, target, game);
+                }
             }
             return false;
         }
@@ -145,10 +138,7 @@ namespace SimpleRPG2
         {
             if(target.empty)
             {
-                if (character.SpendAP(ability.ap))
-                {
-                    UseAbilityAOEHelper(character, ability, target, game);
-                }
+                return UseAbilityPoint(character, ability, target, game);
             }
           
             return false;

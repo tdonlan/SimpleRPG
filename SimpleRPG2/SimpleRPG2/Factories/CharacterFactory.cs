@@ -29,7 +29,7 @@ namespace SimpleRPG2
 
             /*
             retval.abilityList.Add(AbilityFactory.getFireball());
-            retval.abilityList.Add(AbilityFactory.getTeleport());
+          
             retval.abilityList.Add(AbilityFactory.getKnockback());
             retval.abilityList.Add(AbilityFactory.getCharge());
             retval.abilityList.Add(AbilityFactory.getGrenade());
@@ -39,6 +39,7 @@ namespace SimpleRPG2
             retval.abilityList.Add(AbilityFactory.getWeb());
             retval.abilityList.Add(AbilityFactory.getDispellMagic());
             retval.abilityList.Add(AbilityFactory.getStun());
+            retval.abilityList.Add(AbilityFactory.getTeleport());
            
 
             return retval;

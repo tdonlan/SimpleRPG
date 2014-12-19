@@ -55,8 +55,8 @@ namespace SimpleRPG2
                 name = "Teleport",
                 description = "Teleport to a selected location on the map",
                 ap = 10,
-                range = 20,
-                uses = 1,
+                range = 10,
+                uses = 10,
                 targetType = AbilityTargetType.PointEmpty,
                 tilePatternType = TilePatternType.Single,
                 activeEffects = new List<ActiveEffect>() { teleportEffect},
@@ -203,7 +203,7 @@ namespace SimpleRPG2
                 ap = 5,
                 activeEffects = new List<ActiveEffect>() { webEffect },
                 passiveEffects = null,
-                range = 10,
+                range = 5,
                 targetType = AbilityTargetType.LOSTarget,
                 tilePatternType = TilePatternType.NineSquare
             };
@@ -257,9 +257,13 @@ namespace SimpleRPG2
             {
                 name = "Stun",
                 description = "Prohibit any action by the character",
-                activeEffects = new List<ActiveEffect>() { stunEffect},
-                ap=5,passiveEffects=null,range=10,targetType=AbilityTargetType.SingleFoe,
-                tilePatternType=TilePatternType.Single,uses=5
+                activeEffects = new List<ActiveEffect>() { stunEffect },
+                ap = 5,
+                passiveEffects = null,
+                range = 5,
+                targetType = AbilityTargetType.SingleFoe,
+                tilePatternType = TilePatternType.Single,
+                uses = 5
             };
             return stun;
         }
