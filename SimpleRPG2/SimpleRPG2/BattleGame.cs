@@ -526,6 +526,25 @@ namespace SimpleRPG2
             List<string> itemList = new List<string>();
             int counter = 1;
 
+            List<ItemSet> itemSetList = ItemHelper.getItemSet(ActiveCharacter.inventory);
+
+            foreach(var i in itemSetList)
+            {
+                if(i.count > 1 )
+                {
+                    itemList.Add(string.Format("{0}. {1}({2})", counter, i.itemName,i.count));
+
+                }
+
+                else
+                {
+                    itemList.Add(string.Format("{0}. {1}", counter, i.itemName));
+                }
+            
+                counter++;
+            }
+
+            /*
             var usableItemList = (from data in ActiveCharacter.inventory
                                  where data is UsableItem
                                  select data).ToList();
@@ -538,10 +557,16 @@ namespace SimpleRPG2
                     counter++;
                 }
             }
+            */
+
 
 
             int input = CoreHelper.displayMenuGetInt(itemList);
-            UsableItem tempItem = (UsableItem)usableItemList[input - 1];
+
+
+            UsableItem tempItem =  (UsableItem)ItemHelper.getFirstItemWithID(ActiveCharacter.inventory, itemSetList[input - 1].itemID);
+ 
+
             Tile targetTile = null;
             if (tempItem.itemAbility != null)
             {

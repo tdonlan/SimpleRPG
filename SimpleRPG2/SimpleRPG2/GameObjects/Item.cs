@@ -6,8 +6,37 @@ using System.Threading.Tasks;
 
 namespace SimpleRPG2
 {
+
+    public class ItemSet
+    {
+        public string itemName { get; set; }
+        public int itemID { get; set; }
+        public int count { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ItemSet)
+            {
+                ItemSet itemSet2 = (ItemSet)obj;
+                if (this.itemID == itemSet2.itemID)
+                {
+                    return true;
+
+                }
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return itemID.GetHashCode();
+        }
+        
+    }
+
     public class Item
     {
+        public int ID { get; set; }
         public string name { get; set; }
         public ItemType type { get; set; }
         public List<PassiveEffect> passiveEffects { get; set; }

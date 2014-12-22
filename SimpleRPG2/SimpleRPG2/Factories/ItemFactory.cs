@@ -10,14 +10,14 @@ namespace SimpleRPG2
     {
         public static Item getItem(Random r)
         {
-            Item i = new Item() {name="Healing Potion",activeEffects=new List<ActiveEffect>(){getActiveEffect(r)},passiveEffects=null,type=ItemType.Potion };
+            Item i = new Item() {ID=1,name="Healing Potion",activeEffects=new List<ActiveEffect>(){getActiveEffect(r)},passiveEffects=null,type=ItemType.Potion };
 
             return i;
         }
 
         public static UsableItem getHealingPotion(Random r)
         {
-            UsableItem i = new UsableItem() { name = "Healing Potion", activeEffects = new List<ActiveEffect>() { getActiveEffect(r) }, passiveEffects = null, type = ItemType.Potion, actionPoints=5,uses=1 };
+            UsableItem i = new UsableItem() {ID=1, name = "Healing Potion", activeEffects = new List<ActiveEffect>() { getActiveEffect(r) }, passiveEffects = null, type = ItemType.Potion, actionPoints=5,uses=1 };
             return i;
         }
 
@@ -33,19 +33,19 @@ namespace SimpleRPG2
 
         public static Weapon getLongsword(Random r)
         {
-            Weapon w = new Weapon() {name="Long Sword",minDamage=5,maxDamage=10, type=ItemType.Weapon,actionPoints=2,activeEffects=null,passiveEffects=null };
+            Weapon w = new Weapon() {ID=2,name="Long Sword",minDamage=5,maxDamage=10, type=ItemType.Weapon,actionPoints=2,activeEffects=null,passiveEffects=null };
             return w;
         }
 
         public static Weapon getDagger(Random r)
         {
-            Weapon w = new Weapon() { name = "Dagger", minDamage = 1, maxDamage = 2, type = ItemType.Weapon, actionPoints = 1, activeEffects = null, passiveEffects = null };
+            Weapon w = new Weapon() { ID = 3, name = "Dagger", minDamage = 1, maxDamage = 2, type = ItemType.Weapon, actionPoints = 1, activeEffects = null, passiveEffects = null };
             return w;
         }
 
         public static Weapon getBattleAxe(Random r)
         {
-            Weapon w = new Weapon() { name = "Battle Axe", minDamage = 10, maxDamage = 20, type = ItemType.Weapon, actionPoints = 5, activeEffects = null, passiveEffects = null };
+            Weapon w = new Weapon() { ID = 4, name = "Battle Axe", minDamage = 10, maxDamage = 20, type = ItemType.Weapon, actionPoints = 5, activeEffects = null, passiveEffects = null };
             return w;
         }
 
@@ -54,7 +54,7 @@ namespace SimpleRPG2
         {
             //Get an existing ability, but make it free to use
             Ability grenadeAbility = AbilityHelper.getAbilityFree(AbilityFactory.getFireball());
-            UsableItem item = new UsableItem() { name="Grenade",actionPoints=5,activeEffects=null,itemAbility=grenadeAbility,passiveEffects=null,type=ItemType.Thrown,uses=1};
+            UsableItem item = new UsableItem() { ID = 5, name = "Grenade", actionPoints = 5, activeEffects = null, itemAbility = grenadeAbility, passiveEffects = null, type = ItemType.Thrown, uses = 1 };
 
             return item;
         }
@@ -62,7 +62,16 @@ namespace SimpleRPG2
         public static UsableItem getMissileWand(Random r)
         {
             Ability magicMissile = AbilityHelper.getAbilityFree(AbilityFactory.getMagicMissile());
-            UsableItem wand = new UsableItem() { name="Wand of Magic Missile",actionPoints=5,itemAbility=magicMissile,passiveEffects=null,type=ItemType.Wand,activeEffects=null,uses=10
+            UsableItem wand = new UsableItem()
+            {
+                ID = 6,
+                name = "Wand of Magic Missile",
+                actionPoints = 5,
+                itemAbility = magicMissile,
+                passiveEffects = null,
+                type = ItemType.Wand,
+                activeEffects = null,
+                uses = 10
             };
 
             return wand;
@@ -73,25 +82,25 @@ namespace SimpleRPG2
 
         public static Armor getChainmail(Random r)
         {
-            Armor a = new Armor() {name="Chain Mail",activeEffects=null,armor=10,passiveEffects=null,type=ItemType.Armor, armorType=ArmorType.Chest };
+            Armor a = new Armor() { ID = 7, name = "Chain Mail", activeEffects = null, armor = 10, passiveEffects = null, type = ItemType.Armor, armorType = ArmorType.Chest };
             return a;
         }
 
         public static Armor getLeatherChest(Random r)
         {
-            Armor a = new Armor() { name = "Leather Chest", activeEffects = null, armor = 5, passiveEffects = null, type = ItemType.Armor, armorType = ArmorType.Chest };
+            Armor a = new Armor() { ID = 8, name = "Leather Chest", activeEffects = null, armor = 5, passiveEffects = null, type = ItemType.Armor, armorType = ArmorType.Chest };
             return a;
         }
 
         public static Armor getGreathelm(Random r)
         {
-            Armor a = new Armor() { name = "Great Helm", activeEffects = null, armor = 5, passiveEffects = null, type = ItemType.Armor, armorType = ArmorType.Head };
+            Armor a = new Armor() { ID = 9, name = "Great Helm", activeEffects = null, armor = 5, passiveEffects = null, type = ItemType.Armor, armorType = ArmorType.Head };
             return a;
         }
 
         public static Armor getCap(Random r)
         {
-            Armor a = new Armor() { name = "Leather Cap", activeEffects = null, armor = 1, passiveEffects = null, type = ItemType.Armor, armorType = ArmorType.Head };
+            Armor a = new Armor() { ID = 10, name = "Leather Cap", activeEffects = null, armor = 1, passiveEffects = null, type = ItemType.Armor, armorType = ArmorType.Head };
             return a;
         }
 
@@ -101,7 +110,12 @@ namespace SimpleRPG2
             ActiveEffect regenEffect = new ActiveEffect(){name="Regeneration",minAmount=1,maxAmount=1,statType=StatType.Heal};
 
 
-            Armor a = new Armor() { name = "Regeneration Ring", activeEffects = new List<ActiveEffect>(){regenEffect}, armor = 0, 
+            Armor a = new Armor()
+            {
+                ID = 11,
+                name = "Regeneration Ring",
+                activeEffects = new List<ActiveEffect>() { regenEffect },
+                armor = 0, 
                 passiveEffects =null,
                 type = ItemType.Armor, armorType = ArmorType.Ring };
             return a;
@@ -111,7 +125,7 @@ namespace SimpleRPG2
         {
             PassiveEffect attackEffect = new PassiveEffect() { name = "Attack Ring", minAmount = 5, maxAmount = 5, statType = StatType.Attack };
 
-            Armor a = new Armor() { name = "Attack Ring", activeEffects = null, armor = 0, passiveEffects = new List<PassiveEffect>() { attackEffect}, type = ItemType.Armor, armorType = ArmorType.Ring };
+            Armor a = new Armor() { ID = 12, name = "Attack Ring", activeEffects = null, armor = 0, passiveEffects = new List<PassiveEffect>() { attackEffect }, type = ItemType.Armor, armorType = ArmorType.Ring };
             return a;
         }
 
