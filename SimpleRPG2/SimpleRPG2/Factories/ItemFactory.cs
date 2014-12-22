@@ -49,6 +49,26 @@ namespace SimpleRPG2
             return w;
         }
 
+        #region usableItems
+        public static UsableItem getGrenade(Random r)
+        {
+            //Get an existing ability, but make it free to use
+            Ability grenadeAbility = AbilityHelper.getAbilityFree(AbilityFactory.getFireball());
+            UsableItem item = new UsableItem() { name="Grenade",actionPoints=5,activeEffects=null,itemAbility=grenadeAbility,passiveEffects=null,type=ItemType.Thrown,uses=1};
+
+            return item;
+        }
+
+        public static UsableItem getMissileWand(Random r)
+        {
+            Ability magicMissile = AbilityHelper.getAbilityFree(AbilityFactory.getMagicMissile());
+            UsableItem wand = new UsableItem() { name="Wand of Magic Missile",actionPoints=5,itemAbility=magicMissile,passiveEffects=null,type=ItemType.Wand,activeEffects=null,uses=10
+            };
+
+            return wand;
+        }
+        #endregion
+
         #region Armor
 
         public static Armor getChainmail(Random r)

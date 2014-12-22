@@ -8,6 +8,7 @@ namespace SimpleRPG2
 {
     public class AbilityFactory
     {
+
         public static Ability getFireball()
         {
             ActiveEffect fireballEffect = new ActiveEffect() { name = "Fireball", duration = 1, minAmount = 10,maxAmount=20, statType = StatType.Damage };
@@ -26,6 +27,25 @@ namespace SimpleRPG2
             };
 
             return fireball;
+        }
+
+        public static Ability getMagicMissile()
+        {
+            ActiveEffect missileEffect = new ActiveEffect(){name ="Magic Missile",duration=1,minAmount=1,maxAmount=6,statType=StatType.Damage};
+            Ability magicMissile = new Ability()
+            {
+                name= "Magic Missile",
+                description = "Shoot three magic missiles to a target",
+                ap =5,
+                range = 20,
+                uses = 5,
+                targetType = AbilityTargetType.LOSTarget,
+                tilePatternType = TilePatternType.Single,
+                activeEffects = new List<ActiveEffect>(){missileEffect,missileEffect,missileEffect},
+                passiveEffects = null
+            };
+
+            return magicMissile;
         }
 
         public static Ability getHeal()

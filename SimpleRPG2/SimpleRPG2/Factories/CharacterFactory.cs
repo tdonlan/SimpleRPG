@@ -36,6 +36,10 @@ namespace SimpleRPG2
             retval.inventory.Add(ItemFactory.getAttackRing(r));
             retval.inventory.Add(ItemFactory.getRegenRing(r));
 
+            //other
+            retval.inventory.Add(ItemFactory.getGrenade(r));
+            retval.inventory.Add(ItemFactory.getMissileWand(r));
+
             //Abilities
             /*
             retval.abilityList.Add(AbilityFactory.getFireball());

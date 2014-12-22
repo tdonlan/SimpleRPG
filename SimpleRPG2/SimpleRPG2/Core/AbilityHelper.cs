@@ -249,6 +249,15 @@ namespace SimpleRPG2
             return false;
         }
 
+        public static Ability getAbilityFree(Ability a)
+        {
+            Ability tempAbility = cloneAbility(a);
+            tempAbility.ap = 0;
+            tempAbility.uses = 999;
+            return tempAbility;
+
+        }
+
         public static Ability cloneAbility(Ability a)
         {
             return JsonConvert.DeserializeObject<Ability>(JsonConvert.SerializeObject(a));

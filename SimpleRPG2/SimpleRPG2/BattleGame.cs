@@ -542,7 +542,24 @@ namespace SimpleRPG2
 
             int input = CoreHelper.displayMenuGetInt(itemList);
             UsableItem tempItem = (UsableItem)usableItemList[input - 1];
-            UseItem(ActiveCharacter, tempItem);
+            Tile targetTile = null;
+            if (tempItem.itemAbility != null)
+            {
+                bool valid = false;
+                while (!valid)
+                {
+                    string strTile = CoreHelper.displayMenuGetStr(new List<string>() { "Enter Target: (ex: A,1)" });
+
+                    Point p = CoreHelper.parseStringPoint(strTile);
+                    if (p != null)
+                    {
+                        targetTile = board.getTileFromLocation(p.x, p.y);
+                        valid = true;
+                    }
+                }
+            }
+
+            UseItem(ActiveCharacter, tempItem, targetTile);
 
 
             return;
@@ -722,7 +739,7 @@ namespace SimpleRPG2
         
         //Abstract this to a helper
 
-        public void UseItem(GameCharacter character, UsableItem item)
+        public void UseItem(GameCharacter character, UsableItem item, Tile targetTile)
         {
 
             if (!CoreHelper.checkEffect(character.activeEffects, character.passiveEffects, StatType.Stun))
@@ -735,9 +752,19 @@ namespace SimpleRPG2
                         //should this logic be here?
                         ActiveCharacter.inventory.Remove(item);
                     }
-                    foreach (var a in item.activeEffects)
+
+                    if (item.activeEffects != null)
                     {
-                        character.AddActiveEffect(a, this);
+                        foreach (var a in item.activeEffects)
+                        {
+                            character.AddActiveEffect(a, this);
+                        }
+                    }
+
+                    if(item.itemAbility != null)
+                    {
+                        AbilityHelper.UseAbility(ActiveCharacter, item.itemAbility, targetTile, this);
+                        
                     }
 
                     battleLog.AddEntry(string.Format("{0} used item {1}", character.name, item.name));

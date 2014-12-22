@@ -35,6 +35,7 @@ namespace SimpleRPG2
     {
         public int actionPoints { get; set; }
         public int uses { get; set; }
+        public Ability itemAbility { get; set; }
 
         public override string ToString()
         {

@@ -25,6 +25,8 @@ namespace SimpleRPG2
         Weapon,
         Potion,
         Armor,
+        Thrown,
+        Wand,
     }
 
     public enum ArmorType
