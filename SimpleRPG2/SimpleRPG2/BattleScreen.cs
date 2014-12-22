@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace MarketSim
+namespace SimpleRPG2
 {
-    class Program
+    public class BattleScreen
     {
-        static void Main(string[] args)
-        {
 
-        }
     }
 }
