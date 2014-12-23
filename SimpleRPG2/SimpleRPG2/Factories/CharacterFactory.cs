@@ -45,13 +45,13 @@ namespace SimpleRPG2
             retval.inventory.Add(ItemFactory.getGrenade(r));
             retval.inventory.Add(ItemFactory.getMissileWand(r));
 
-            for(int i=0;i<100;i++)
+            for(int i=0;i<5;i++)
             {
                 retval.inventory.Add(ItemFactory.getArrow(r));
             }
 
             //equipping ammo
-            retval.Ammo = ItemHelper.getItemSet(retval.inventory, ItemFactory.getArrow(r));
+            //retval.Ammo = ItemHelper.getItemSet(retval.inventory, ItemFactory.getArrow(r));
           
 
             //Abilities

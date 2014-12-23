@@ -221,10 +221,6 @@ namespace SimpleRPG2
         public void EquipArmor(Armor a)
         {
 
-            //var inventoryArmorList = from data in inventory
-            //                         where data is Armor
-            //                         select data;
-
             if(inventory.Contains(a))
             {
                 if(equippedArmor.FindAll(x =>x.armorType == a.armorType).Count == 0)
@@ -280,6 +276,19 @@ namespace SimpleRPG2
                 }
                
             }
+        }
+
+        public void EquipAmmo(Ammo a)
+        {
+            if(inventory.Contains(a))
+            {
+                this.Ammo = ItemHelper.getItemSet(inventory, a);
+            }
+        }
+
+        public void RemoveAmmo()
+        {
+            this.Ammo = null;
         }
 
 

@@ -31,6 +31,11 @@ namespace SimpleRPG2
         {
             return itemID.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0} ({1})", itemName, count);
+        }
         
     }
 
@@ -91,12 +96,23 @@ namespace SimpleRPG2
     {
         public int range { get; set; }
         public AmmoType ammoType { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} dmg: {1}-{2} range:{3} ammo {4} ap: {5}", name, minDamage, maxDamage,range,ammoType.ToString(), actionPoints);
+        }
     }
 
     public class Ammo : Item
     {
+        
         public int bonusDamage { get; set; }
         public AmmoType ammoType { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} dmg: {1} type: {2}", name, bonusDamage, ammoType.ToString());
+        }
     }
 
     public class Armor : Item

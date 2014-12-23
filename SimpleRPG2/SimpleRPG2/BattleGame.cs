@@ -286,9 +286,25 @@ namespace SimpleRPG2
         {
             List<string> equipStrMenu = new List<string>();
             int counter = 1;
-            equipStrMenu.Add(string.Format("{0}. {1}", counter, ActiveCharacter.weapon.ToString()));
+            if (ActiveCharacter.weapon != null)
+            {
+                equipStrMenu.Add(string.Format("{0}. Weapon: {1}", counter, ActiveCharacter.weapon.ToString()));
+            }
+            else
+            {
+                equipStrMenu.Add(string.Format("{0}. Equip Weapon", counter ));
+            }
             counter++;
 
+            if (ActiveCharacter.Ammo != null)
+            {
+                equipStrMenu.Add(string.Format("{0} Ammo: {1}", counter, ActiveCharacter.Ammo.ToString()));
+            }
+            else
+            {
+                equipStrMenu.Add(string.Format("{0} Equip Ammo", counter));
+            }
+            counter++;
 
             List<ArmorType> armorTypeList = new List<ArmorType>();
 
@@ -317,6 +333,10 @@ namespace SimpleRPG2
                 if(index == 1)
                 {
                     DisplayWeaponsMenu();
+                }
+                else if(index == 2)
+                {
+                    DisplayAmmoMenu();
                 }
                 else
                 {
@@ -399,6 +419,45 @@ namespace SimpleRPG2
 
             return;
             
+        }
+
+        private void DisplayAmmoMenu()
+        {
+            Console.WriteLine("Ammo");
+            //Current Weapon
+            if (ActiveCharacter.Ammo != null)
+            {
+                Console.WriteLine(ActiveCharacter.Ammo.ToString());
+            }
+
+            //Available ammo
+            //var ammoList = (from data in ActiveCharacter.inventory
+            //               where data.type == ItemType.Ammo
+            //               select data).GroupBy(x=>x.ID).ToList();
+
+            var ammoList = (from data in ActiveCharacter.inventory
+                            where data.type == ItemType.Ammo
+                            select data).ToList();
+
+            List<string> ammoStrList = new List<string>();
+            int counter = 1;
+            foreach (var a in ammoList)
+            {
+                ammoStrList.Add(string.Format("{0}. {1}", counter, a.ToString()));
+                counter++;
+            }
+
+            ammoStrList.Add(string.Format("{0}. Back", counter));
+
+            int ammoIndex = CoreHelper.displayMenuGetInt(ammoStrList);
+            if (ammoIndex != counter)
+            {
+                ActiveCharacter.RemoveAmmo();
+                ActiveCharacter.EquipAmmo((Ammo)ammoList[ammoIndex - 1]);
+            }
+
+            return;
+
         }
 
         private void DisplayViewMenu()
