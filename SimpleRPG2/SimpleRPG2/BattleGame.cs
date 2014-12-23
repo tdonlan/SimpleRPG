@@ -59,12 +59,6 @@ namespace SimpleRPG2
             characterList.Add(CharacterFactory.getEnemy(r));
             characterList.Add(CharacterFactory.getEnemy(r));
 
-            //Test
-            GameCharacter e = CharacterFactory.getEnemy(r);
-            e.hp = 0;
-            characterList.Add(e);
-            //-----------------
-
             battleLog.AddEntry("Characters Initialized");
         }
 
@@ -797,31 +791,47 @@ namespace SimpleRPG2
         public void UseItem(GameCharacter character, UsableItem item, Tile targetTile)
         {
 
+            bool usedItem = false;
+
             if (!CoreHelper.checkEffect(character.activeEffects, character.passiveEffects, StatType.Stun))
             {
-                if (character.SpendAP(item.actionPoints))
+                if (character.CheckAP(item.actionPoints))
                 {
-                    item.uses--;
-                    if (item.uses <= 0)
-                    {
-                        //should this logic be here?
-                        ActiveCharacter.inventory.Remove(item);
-                    }
-
                     if (item.activeEffects != null)
                     {
                         foreach (var a in item.activeEffects)
                         {
                             character.AddActiveEffect(a, this);
                         }
+                        usedItem = true;
+                        character.SpendAP(item.actionPoints);
+                        item.uses--;
                     }
 
-                    if(item.itemAbility != null)
+                    else if(item.itemAbility != null)
                     {
-                        AbilityHelper.UseAbility(ActiveCharacter, item.itemAbility, targetTile, this);
-                        
+                        bool usedAbility = AbilityHelper.UseAbility(ActiveCharacter, item.itemAbility, targetTile, this);
+                        if(usedAbility)
+                        {
+                            usedItem = true;
+                            character.SpendAP(item.actionPoints);
+                            item.uses--;
+                        }
                     }
 
+                    if (item.uses <= 0)
+                    {
+                        //should this logic be here?
+                        battleLog.AddEntry(string.Format("{0} has not more uses.", item.name));
+
+                        ActiveCharacter.inventory.Remove(item);
+                    }
+
+                  
+                }
+               
+                if(usedItem)
+                {
                     battleLog.AddEntry(string.Format("{0} used item {1}", character.name, item.name));
                 }
                 else

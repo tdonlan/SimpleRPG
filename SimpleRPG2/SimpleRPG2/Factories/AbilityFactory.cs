@@ -11,7 +11,7 @@ namespace SimpleRPG2
 
         public static Ability getFireball()
         {
-            ActiveEffect fireballEffect = new ActiveEffect() { name = "Fireball", duration = 1, minAmount = 10,maxAmount=20, statType = StatType.Damage };
+            ActiveEffect fireballEffect = new ActiveEffect() { name = "Fireball", duration = 1, minAmount = 100,maxAmount=200, statType = StatType.Damage };
 
             Ability fireball = new Ability()
             {

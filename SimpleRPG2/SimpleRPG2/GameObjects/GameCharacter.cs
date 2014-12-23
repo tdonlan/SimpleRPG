@@ -60,6 +60,15 @@ namespace SimpleRPG2
             abilityList = new List<Ability>();
         }
 
+        public bool CheckAP(int ap)
+        {
+            if(this.ap >= ap)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public bool SpendAP(int ap)
         {
             if(this.ap >= ap)
