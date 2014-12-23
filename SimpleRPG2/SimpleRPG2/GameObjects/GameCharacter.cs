@@ -144,7 +144,7 @@ namespace SimpleRPG2
             game.battleLog.AddEntry(string.Format("{0} was hurt for {1}", this.name, amount));
 
             this.hp -= amount;
-            if(this.hp < 0)
+            if(this.hp <= 0)
             {
                 Kill(game);
             }

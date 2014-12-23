@@ -59,6 +59,12 @@ namespace SimpleRPG2
             characterList.Add(CharacterFactory.getEnemy(r));
             characterList.Add(CharacterFactory.getEnemy(r));
 
+            //Test
+            GameCharacter e = CharacterFactory.getEnemy(r);
+            e.hp = 0;
+            characterList.Add(e);
+            //-----------------
+
             battleLog.AddEntry("Characters Initialized");
         }
 
@@ -96,6 +102,16 @@ namespace SimpleRPG2
             }
         }
 
+        private void NextTurnActiveDied()
+        {
+            TurnCounter++;
+            NewTurn = true;
+            if (currentCharacter >= characterList.Count)
+            {
+                currentCharacter = 0;
+            }
+        }
+
         //currently, randomize
         private void placeCharactersInBoard()
         {
@@ -106,63 +122,77 @@ namespace SimpleRPG2
             }
         }
 
-
         private void RunBattle()
         {
-            bool isAction = false;
             BattleStatusType battleStatus = getBattleStatus();
-            while(battleStatus == BattleStatusType.Running)
+            while (battleStatus == BattleStatusType.Running)
             {
-                isAction = false;
-                Console.Clear();
-                Console.WriteLine(board.ToString());
-                battleLog.Print(1);
-                DisplayCharList();
-                DisplayActiveChar();
+
+                if (NewTurn)
+                {
+                    NewTurn = false;
+                    ActiveCharacter.RunActiveEffects(this);
+                }
+
+                DisplayScreen();
 
                 if (ActiveCharacter.hp > 0)
                 {
-                    if(NewTurn)
-                    {
-                        NewTurn = false;
-                        ActiveCharacter.RunActiveEffects(this);
-                    }
-
+                 
                     if (ActiveCharacter.type == CharacterType.Player)
                     {
-                        isAction = DisplayMainMenu();
-
+                        RunTurnPlayer();
                     }
                     else
                     {
                         RunEnemyTurn();
                         System.Threading.Thread.Sleep(1000);
                     }
-
-                    if (isAction)
-                    {
-                        DisplayTempBoard();
-                        System.Threading.Thread.Sleep(1000);
-                    }
-
                 }
                 else
                 {
-                    CharacterKill(ActiveCharacter); 
-                    NextTurn();
+                    CharacterKill(ActiveCharacter);
+                    NextTurnActiveDied();
                 }
 
                 battleStatus = getBattleStatus();
             }
-            if(battleStatus == BattleStatusType.PlayersDead)
+
+            if (battleStatus == BattleStatusType.PlayersDead)
             {
                 LoseBattle();
             }
-            else if(battleStatus == BattleStatusType.EnemiesDead)
+            else if (battleStatus == BattleStatusType.EnemiesDead)
             {
                 WinBattle();
             }
-           
+
+        }
+
+        private void DisplayScreen()
+        {
+            Console.Clear();
+            Console.WriteLine(board.ToString());
+            battleLog.Print(1);
+            DisplayCharList();
+            DisplayActiveChar();
+        }
+
+        private void RunTurnPlayer()
+        {
+           // GameCharacter currentPlayer = ActiveCharacter;
+
+            if(DisplayMainMenu())
+            {
+                DisplayTempBoard();
+                System.Threading.Thread.Sleep(1000);
+            }
+
+        }
+
+        private void RunTurnEnemy()
+        {
+
         }
 
         private void DisplayTempBoard()
@@ -826,7 +856,7 @@ namespace SimpleRPG2
         {
             if(!CoreHelper.checkEffect(ActiveCharacter.activeEffects,ActiveCharacter.passiveEffects,StatType.Stun))
             { 
-                AI.attackNearestPlayer(ActiveCharacter, this); 
+                //AI.attackNearestPlayer(ActiveCharacter, this); 
             }
 
             NextTurn();

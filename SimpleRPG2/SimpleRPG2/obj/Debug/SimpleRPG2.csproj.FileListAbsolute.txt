@@ -3,8 +3,8 @@ C:\GameDev\GitHubRepos\SimpleRPG\SimpleRPG2\SimpleRPG2\bin\Debug\SimpleRPG2.exe
 C:\GameDev\GitHubRepos\SimpleRPG\SimpleRPG2\SimpleRPG2\bin\Debug\SimpleRPG2.pdb
 C:\GameDev\GitHubRepos\SimpleRPG\SimpleRPG2\SimpleRPG2\bin\Debug\Newtonsoft.Json.dll
 C:\GameDev\GitHubRepos\SimpleRPG\SimpleRPG2\SimpleRPG2\bin\Debug\Newtonsoft.Json.xml
-C:\GameDev\GitHubRepos\SimpleRPG\SimpleRPG2\SimpleRPG2\obj\Debug\SimpleRPG2.csprojResolveAssemblyReference.cache
 C:\GameDev\GitHubRepos\SimpleRPG\SimpleRPG2\SimpleRPG2\obj\Debug\SimpleRPG2.exe
 C:\GameDev\GitHubRepos\SimpleRPG\SimpleRPG2\SimpleRPG2\obj\Debug\SimpleRPG2.pdb
 C:\GameDev\GitHubRepos\SimpleRPG\SimpleRPG2\SimpleRPG2\bin\Debug\DataFiles\Abilities.json
 C:\GameDev\GitHubRepos\SimpleRPG\SimpleRPG2\SimpleRPG2\bin\Debug\DataFiles\manifest.json
+C:\GameDev\GitHubRepos\SimpleRPG\SimpleRPG2\SimpleRPG2\obj\Debug\SimpleRPG2.csprojResolveAssemblyReference.cache

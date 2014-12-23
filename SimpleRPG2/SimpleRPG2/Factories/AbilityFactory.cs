@@ -288,5 +288,26 @@ namespace SimpleRPG2
             return stun;
         }
 
+        public static Ability getPoison()
+        {
+            ActiveEffect poisonEffect = new ActiveEffect() { name = "Poison", duration = 99, minAmount = 10, maxAmount = 10, statType = StatType.Damage };
+            Ability poison = new Ability()
+            {
+                name = "Poison",
+                description = "Dangerous poison damages every round",
+                activeEffects = new List<ActiveEffect>() { poisonEffect },
+                ap = 1,
+                ID = 99,
+                passiveEffects = null
+                ,
+                range = 1,
+                targetType = AbilityTargetType.PointTarget,
+                tilePatternType = TilePatternType.Single,
+                uses = 99
+            };
+
+            return poison;
+        }
+
     }
 }
