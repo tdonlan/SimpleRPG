@@ -9,7 +9,7 @@ namespace SimpleRPG2
     public class ItemHelper
     {
         //return a list of item sets, given the full inventory
-        public static List<ItemSet> getItemSet(List<Item> inventory)
+        public static List<ItemSet> getItemSetList(List<Item> inventory)
         {
 
             List<ItemSet> retvalList = new List<ItemSet>();
@@ -30,6 +30,12 @@ namespace SimpleRPG2
             }
 
             return retvalList;
+        }
+
+        public static ItemSet getItemSet(List<Item> inventory, Item i)
+        {
+            int count = inventory.Count(x => x.ID == i.ID);
+            return new ItemSet() { itemName = i.name, itemID = i.ID, count = count };
         }
 
         public static Item getFirstItemWithID(List<Item> inventory, int ID)

@@ -77,12 +77,26 @@ namespace SimpleRPG2
         public int minDamage { get; set; }
         public int maxDamage { get; set; }
         public int actionPoints { get; set; }
+        public WeaponType weaponType {get;set;}
+             
 
         public override string ToString()
         {
             return string.Format("{0} dmg: {1}-{2} ap: {3}", name, minDamage,maxDamage,actionPoints);
         }
 
+    }
+
+    public class RangedWeapon : Weapon
+    {
+        public int range { get; set; }
+        public AmmoType ammoType { get; set; }
+    }
+
+    public class Ammo : Item
+    {
+        public int bonusDamage { get; set; }
+        public AmmoType ammoType { get; set; }
     }
 
     public class Armor : Item

@@ -550,7 +550,7 @@ namespace SimpleRPG2
             List<string> itemList = new List<string>();
             int counter = 1;
 
-            List<ItemSet> itemSetList = ItemHelper.getItemSet(ActiveCharacter.inventory);
+            List<ItemSet> itemSetList = ItemHelper.getItemSetList(ActiveCharacter.inventory);
 
             foreach(var i in itemSetList)
             {
@@ -736,7 +736,7 @@ namespace SimpleRPG2
             return false;
         }
 
-        private void PlayerRangedAttack(GameCharacter player, Tile destination)
+        private void PlayerRangedAttackOld(GameCharacter player, Tile destination)
         {
             if (!CoreHelper.checkEffect(player.activeEffects, player.passiveEffects, StatType.Stun))
             {
@@ -754,7 +754,7 @@ namespace SimpleRPG2
                     }
 
 
-                    if (tileLOSList[tileLOSList.Count - 1] == destination)
+                    if (tileLOSList[tileLOSList.Count - 1] == destination )
                     {
                         if (player.SpendAP(player.weapon.actionPoints))
                         {
@@ -769,6 +769,22 @@ namespace SimpleRPG2
                             path += p.ToString() + " ";
                         }
                         battleLog.AddEntry("Ranged attack failed. Path: " + path);
+                    }
+                }
+            }
+        }
+
+        private void PlayerRangedAttack(GameCharacter player, Tile destination)
+        {
+            if (!CoreHelper.checkEffect(player.activeEffects, player.passiveEffects, StatType.Stun))
+            {
+                GameCharacter enemy = getCharacterFromTile(destination);
+
+                if (enemy != null)
+                {
+                    if(!CombatHelper.RangedAttack(player, enemy, destination, this))
+                    {
+                        battleLog.AddEntry("Ranged attack failed.");
                     }
                 }
             }
@@ -822,7 +838,7 @@ namespace SimpleRPG2
                     if (item.uses <= 0)
                     {
                         //should this logic be here?
-                        battleLog.AddEntry(string.Format("{0} has not more uses.", item.name));
+                        battleLog.AddEntry(string.Format("{0} has no more uses.", item.name));
 
                         ActiveCharacter.inventory.Remove(item);
                     }

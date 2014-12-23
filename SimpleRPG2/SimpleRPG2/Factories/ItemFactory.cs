@@ -49,6 +49,20 @@ namespace SimpleRPG2
             return w;
         }
 
+        public static RangedWeapon getBow(Random r)
+        {
+            RangedWeapon w = new RangedWeapon() { ID = 5, name = "Bow", minDamage = 5, maxDamage = 5, 
+                type = ItemType.Weapon, actionPoints = 5, activeEffects = null, passiveEffects = null,ammoType=AmmoType.Arrows,range=15,weaponType=WeaponType.TwoHandRanged };
+
+            return w;
+        }
+
+        public static Ammo getArrow(Random r)
+        {
+            Ammo a = new Ammo() { ID = 20, activeEffects = null, ammoType = AmmoType.Arrows, bonusDamage = 5, name = "Arrow", passiveEffects = null, type = ItemType.Ammo };
+            return a;
+        }
+
         #region usableItems
         public static UsableItem getGrenade(Random r)
         {

@@ -27,6 +27,23 @@ namespace SimpleRPG2
         Armor,
         Thrown,
         Wand,
+        Ammo,
+    }
+
+    public enum WeaponType
+    {
+        OneHandMelee,
+        OneHandRanged,
+        TwoHandMelee,
+        TwoHandRanged,
+    }
+
+    public enum AmmoType
+    {
+        Arrows,
+        Bolts,
+        Stones,
+
     }
 
     public enum ArmorType

@@ -45,6 +45,8 @@ namespace SimpleRPG2
         public List<Item> inventory { get; set; }
         public List<Armor> equippedArmor { get; set; }
         public Weapon weapon { get; set; }
+
+        public ItemSet Ammo { get; set; }
      
 
         public List<ActiveEffect> activeEffects { get; set; }
