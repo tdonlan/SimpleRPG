@@ -55,6 +55,7 @@
     <Compile Include="Factories\AbilityFactory.cs" />
     <Compile Include="Factories\BoardFactory.cs" />
     <Compile Include="GameObjects\Ability.cs" />
+    <Compile Include="GameObjects\BattleAction.cs" />
     <Compile Include="GameObjects\Board.cs" />
     <Compile Include="Factories\CharacterFactory.cs" />
     <Compile Include="Core\CombatHelper.cs" />

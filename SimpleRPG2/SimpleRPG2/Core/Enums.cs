@@ -122,5 +122,16 @@ namespace SimpleRPG2
         Maps
     }
 
+    public enum BattleActionType
+    {
+        Move,
+        Attack,
+        RangedAttack,
+        UseItem,
+        UseAbility,
+        EndTurn
+    }
+        
+
 }
 

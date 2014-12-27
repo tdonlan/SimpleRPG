@@ -21,6 +21,8 @@ namespace SimpleRPG2
         public int TurnCounter;
         public bool NewTurn;
 
+        public List<BattleAction> actionQueue = new List<BattleAction>();
+
         public GameCharacter ActiveCharacter
         {
             get
@@ -116,7 +118,7 @@ namespace SimpleRPG2
             }
         }
 
-        private void RunBattle()
+        private void RunBattleOld()
         {
             BattleStatusType battleStatus = getBattleStatus();
             while (battleStatus == BattleStatusType.Running)
@@ -161,6 +163,134 @@ namespace SimpleRPG2
                 WinBattle();
             }
 
+        }
+
+        //Testing player movement
+        private void RunBattle()
+        {
+            BattleStatusType battleStatus = getBattleStatus();
+            while (battleStatus == BattleStatusType.Running)
+            {
+
+                if (NewTurn)
+                {
+                    NewTurn = false;
+                    ActiveCharacter.RunActiveEffects(this);
+                }
+
+                DisplayScreen();
+
+                if (ActiveCharacter.hp > 0)
+                {
+
+                    if (actionQueue.Count > 0)
+                    {
+                        RunActionQueue();
+                    }
+                    else
+                    {
+                        if (ActiveCharacter.type == CharacterType.Player)
+                        {
+                            actionQueue = DisplayMainMenuGetActionList();
+                            //RunTurnPlayer();
+                        }
+                        else
+                        {
+                            RunEnemyTurn();
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                    }
+
+                    
+                }
+                else
+                {
+                    CharacterKill(ActiveCharacter);
+                    NextTurnActiveDied();
+                }
+
+                battleStatus = getBattleStatus();
+            }
+
+            if (battleStatus == BattleStatusType.PlayersDead)
+            {
+                LoseBattle();
+            }
+            else if (battleStatus == BattleStatusType.EnemiesDead)
+            {
+                WinBattle();
+            }
+
+        }
+
+        //while we have actions in the queue, execute, otherwise return
+        private void RunActionQueue()
+        {
+            while(actionQueue.Count > 0)
+            {
+
+                DisplayScreen();
+
+                BattleAction action = actionQueue[0];
+                actionQueue.RemoveAt(0);
+
+                switch(action.actionType)
+                {
+                    case BattleActionType.Move:
+                        if(!PlayerMove(action.character,action.targetTile.x,action.targetTile.y))
+                        {
+                            actionQueue.Clear();
+                            return;
+                        }
+                        break; 
+                    case BattleActionType.Attack:
+                        if(!PlayerAttack(action.character,action.targetTile))
+                        {
+                            actionQueue.Clear();
+                            return;
+                        }
+                        break;
+                    case BattleActionType.RangedAttack:
+                        if (!PlayerRangedAttack(action.character, action.targetTile))
+                        {
+                            actionQueue.Clear();
+                            return;
+                        }
+                        break;
+                    case BattleActionType.UseAbility:
+                       
+                       if(!UseAbility(action.character,action.ability,action.targetTile))
+                       {
+                           actionQueue.Clear();
+                           return;
+                       }
+                        break;
+                    case BattleActionType.UseItem:
+                        if(!UseItem(action.character,action.item,action.targetTile))
+                        {
+                            actionQueue.Clear();
+                            return;
+                        }
+                        break;
+                    case BattleActionType.EndTurn:
+                        NextTurn();
+                        return;
+                        
+                    default:
+                        return;
+                
+                }
+
+                System.Threading.Thread.Sleep(500);
+
+                DisplayTempBoard();
+
+                System.Threading.Thread.Sleep(500);
+
+
+            }
+
+            return;
         }
 
         private void DisplayScreen()
@@ -280,6 +410,58 @@ namespace SimpleRPG2
                 default: break;
             }
             return isAction;
+        }
+
+       private List<BattleAction> DisplayMainMenuGetActionList()
+        {
+            List<BattleAction> actionList = new List<BattleAction>();
+
+         
+
+            List<string> menu = new List<string>(){"1. View",
+                "2. Move","3. Attack", "4. Ranged Attack","5. Use Item",
+                "6. Use Ability", "7. Equipment", "8. End Turn", "9. Refresh"};
+            int input = CoreHelper.displayMenuGetInt(menu);
+            switch (input)
+            {
+                case 1:
+                    //DisplayViewMenu();
+                    DisplayViewMenu2();
+                    break;
+                case 2:
+                    actionList = DisplayMoveGetActionList();
+        
+                    break;
+  
+                case 3:
+                    actionList = DisplayAttackGetActionList();
+
+                    break;
+                case 4:
+                    actionList = DisplayRangedAttackGetActionList();
+
+                    break;
+                case 5:
+                    actionList = DisplayItemGetActionList();
+ 
+                    break;
+                case 6:
+                    actionList = DisplayAbilityGetActionList();
+
+                    break;
+                case 7:
+                    DisplayEquipmentMenu();
+                    break;
+
+                case 8:
+                    PlayerSkip();
+                    break;
+                case 9:
+                    break;
+                default: break;
+            }
+
+            return actionList;
         }
 
         private void DisplayEquipmentMenu()
@@ -554,8 +736,37 @@ namespace SimpleRPG2
                     }
 
                 }
+            }
+        }
+
+        private List<BattleAction> DisplayMoveGetActionList()
+        {
+
+            List<BattleAction> moveList = new List<BattleAction>();
+
+            List<string> menu = new List<string>() { "Enter destination ex: 'A,1'" };
+            bool valid = false;
+            while (!valid)
+            {
+                string input = CoreHelper.displayMenuGetStr(menu);
+
+                Point targetPoint = CoreHelper.parseStringPoint(input);
+                if (targetPoint != null)
+                {
+                    List<Point> pointList = PathFind.Pathfind(board, ActiveCharacter.x, ActiveCharacter.y, targetPoint.x, targetPoint.y);
+                    pointList.RemoveAt(0); //remove the character from pathfind.
+                    foreach(var p in pointList)
+                    {
+                        moveList.Add(new BattleAction() { character = ActiveCharacter, actionType = BattleActionType.Move, targetTile = board.getTileFromPoint(p) });
+                    }
+
+                    valid = true;
+
+                }
 
             }
+
+            return moveList;
         }
 
         private void DisplayRangedAttackMenu()
@@ -574,6 +785,26 @@ namespace SimpleRPG2
                 }
 
             }
+        }
+
+        private List<BattleAction> DisplayRangedAttackGetActionList()
+        {
+            List<BattleAction> actionList = new List<BattleAction>();
+
+            List<string> menu = new List<string>() { "Enter target ex: 'A,1'" };
+            bool valid = false;
+            while (!valid)
+            {
+                string input = CoreHelper.displayMenuGetStr(menu);
+
+                Point p = CoreHelper.parseStringPoint(input);
+                if (p != null)
+                {
+                    actionList.Add(new BattleAction() { character = ActiveCharacter, targetTile = board.getTileFromLocation(p.x, p.y), actionType = BattleActionType.RangedAttack }); 
+                    valid = true;
+                }
+            }
+            return actionList;
         }
 
 
@@ -601,6 +832,39 @@ namespace SimpleRPG2
 
                 board.AddTempChar(board.getTileFromLocation(attackCharList[input - 1].x, attackCharList[input - 1].y),'X');
             }
+        }
+
+        //Move to the target then attack
+        private List<BattleAction> DisplayAttackGetActionList()
+        {
+            List<BattleAction> actionList = new List<BattleAction>();
+
+            List<string> menu = new List<string>() { "Enter target ex: 'A,1'" };
+            bool valid = false;
+            while (!valid)
+            {
+                string input = CoreHelper.displayMenuGetStr(menu);
+
+                Point targetPoint = CoreHelper.parseStringPoint(input);
+                if (targetPoint != null)
+                {
+                    //path find to target
+                    List<Point> pointList = PathFind.Pathfind(board, ActiveCharacter.x, ActiveCharacter.y, targetPoint.x, targetPoint.y);
+                    pointList.RemoveAt(0); //remove the character from pathfind.
+                    pointList.RemoveAt(pointList.Count - 1); //remove the target from pathfind.
+
+                    foreach (var p in pointList)
+                    {
+                        actionList.Add(new BattleAction() { character = ActiveCharacter, actionType = BattleActionType.Move, targetTile = board.getTileFromPoint(p) });
+                    }
+                    
+                    //attack action
+                    actionList.Add(new BattleAction() { character = ActiveCharacter, targetTile = board.getTileFromLocation(targetPoint.x, targetPoint.y), actionType = BattleActionType.Attack });
+                    
+                    valid = true;
+                }
+            }
+            return actionList;
         }
 
         public void DisplayItemMenu()
@@ -673,6 +937,54 @@ namespace SimpleRPG2
             return;
         }
 
+        private List<BattleAction> DisplayItemGetActionList()
+        {
+            List<BattleAction> actionList = new List<BattleAction>();
+
+            List<string> itemList = new List<string>();
+            int counter = 1;
+
+            List<ItemSet> itemSetList = ItemHelper.getItemSetList(ActiveCharacter.inventory);
+
+            foreach (var i in itemSetList)
+            {
+                if (i.count > 1)
+                {
+                    itemList.Add(string.Format("{0}. {1}({2})", counter, i.itemName, i.count));
+                }
+                else
+                {
+                    itemList.Add(string.Format("{0}. {1}", counter, i.itemName));
+                }
+
+                counter++;
+            }
+
+            int input = CoreHelper.displayMenuGetInt(itemList);
+
+            UsableItem tempItem = (UsableItem)ItemHelper.getFirstItemWithID(ActiveCharacter.inventory, itemSetList[input - 1].itemID);
+
+            Tile targetTile = null;
+            if (tempItem.itemAbility != null)
+            {
+                bool valid = false;
+                while (!valid)
+                {
+                    string strTile = CoreHelper.displayMenuGetStr(new List<string>() { "Enter Target: (ex: A,1)" });
+
+                    Point p = CoreHelper.parseStringPoint(strTile);
+                    if (p != null)
+                    {
+                        targetTile = board.getTileFromLocation(p.x, p.y);
+                        valid = true;
+                    }
+                }
+            }
+
+            actionList.Add(new BattleAction() { character = ActiveCharacter, targetTile = targetTile, actionType = BattleActionType.UseItem, item = tempItem });
+            return actionList;
+        }
+
         public void DisplayAbilityMenu()
         {
 
@@ -710,6 +1022,47 @@ namespace SimpleRPG2
             }
 
             return;
+        }
+
+        public List<BattleAction> DisplayAbilityGetActionList()
+        {
+            List<BattleAction> actionList = new List<BattleAction>();
+
+            List<string> displayList = new List<string>();
+            int counter = 1;
+
+            var usableAbilityList = (from data in ActiveCharacter.abilityList
+                                     where data.uses > 0
+                                     select data).ToList();
+
+            foreach (var i in usableAbilityList)
+            {
+                displayList.Add(string.Format("{0}. {1}", counter, i.name));
+                counter++;
+            }
+
+            int input = CoreHelper.displayMenuGetInt(displayList);
+
+            if (input > 0 && input <= usableAbilityList.Count)
+            {
+
+                bool valid = false;
+                while (!valid)
+                {
+                    string targetTile = CoreHelper.displayMenuGetStr(new List<string>() { "Enter Target: (ex: A,1)" });
+
+                    Point p = CoreHelper.parseStringPoint(targetTile);
+                    if (p != null)
+                    {
+
+                        actionList.Add(new BattleAction() { character = ActiveCharacter, actionType = BattleActionType.UseAbility, ability = usableAbilityList[input - 1], targetTile = board.getTileFromLocation(p.x, p.y) });
+
+                        valid = true;
+                    }
+                }
+            }
+
+            return actionList;
         }
 
         public GameCharacter getCharacterFromTile(Tile t)
@@ -783,7 +1136,6 @@ namespace SimpleRPG2
             battleLog.AddEntry(characterList[currentCharacter].name + " ended turn.");
 
             NextTurn();
-
         }
 
         private bool PlayerMove(GameCharacter player, int x, int y)
@@ -791,6 +1143,15 @@ namespace SimpleRPG2
             if (!CoreHelper.checkEffect(player.activeEffects, player.passiveEffects, StatType.Stun))
             {
                 return board.MoveCharacter(player, board.getTileFromLocation(x, y));
+            }
+            return false;
+        }
+
+        private bool CharacterMove(GameCharacter character, int x, int y)
+        {
+            if (!CoreHelper.checkEffect(character.activeEffects, character.passiveEffects, StatType.Stun))
+            {
+                return board.MoveCharacter(character, board.getTileFromLocation(x, y));
             }
             return false;
         }
@@ -834,7 +1195,7 @@ namespace SimpleRPG2
             }
         }
 
-        private void PlayerRangedAttack(GameCharacter player, Tile destination)
+        private bool PlayerRangedAttack(GameCharacter player, Tile destination)
         {
             if (!CoreHelper.checkEffect(player.activeEffects, player.passiveEffects, StatType.Stun))
             {
@@ -842,12 +1203,34 @@ namespace SimpleRPG2
 
                 if (enemy != null)
                 {
-                    if(!CombatHelper.RangedAttack(player, enemy, destination, this))
+                    if(CombatHelper.RangedAttack(player, enemy, destination, this))
                     {
-                        battleLog.AddEntry("Ranged attack failed.");
+                        return true;
                     }
                 }
             }
+            battleLog.AddEntry("Ranged attack failed.");
+            return false;
+        }
+
+        private bool PlayerAttack(GameCharacter attacker, Tile targetTile)
+        {
+            if (!CoreHelper.checkEffect(attacker.activeEffects, attacker.passiveEffects, StatType.Stun))
+            {
+                GameCharacter enemy = getCharacterFromTile(targetTile);
+                if(enemy != null)
+                {
+                    if (attacker.weapon != null)
+                    {
+                        if (attacker.SpendAP(attacker.weapon.actionPoints))
+                        {
+                            return CombatHelper.Attack(attacker, enemy, this);
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         private void PlayerAttack(GameCharacter player, GameCharacter enemy)
@@ -864,7 +1247,7 @@ namespace SimpleRPG2
         
         //Abstract this to a helper
 
-        public void UseItem(GameCharacter character, UsableItem item, Tile targetTile)
+        public bool UseItem(GameCharacter character, UsableItem item, Tile targetTile)
         {
 
             bool usedItem = false;
@@ -909,16 +1292,20 @@ namespace SimpleRPG2
                 if(usedItem)
                 {
                     battleLog.AddEntry(string.Format("{0} used item {1}", character.name, item.name));
+                    return true;
                 }
                 else
                 {
                     battleLog.AddEntry(string.Format("{0} was unable to use item {1}", character.name, item.name));
+                    return false;
                 }
+               
             }
+            return false;
 
         }
 
-        public void UseAbility(GameCharacter character, Ability ability, Tile target)
+        public bool UseAbility(GameCharacter character, Ability ability, Tile target)
         {
             if (!CoreHelper.checkEffect(character.activeEffects, character.passiveEffects, StatType.Stun))
             {
@@ -927,6 +1314,7 @@ namespace SimpleRPG2
                     if (AbilityHelper.UseAbility(character, ability, target, this))
                     {
                         battleLog.AddEntry(string.Format("{0} used {1}", character.name, ability.name));
+                        return true;
                     }
                     else
                     {
@@ -934,6 +1322,7 @@ namespace SimpleRPG2
                     }
                 }
             }
+            return false;
         }
 
    

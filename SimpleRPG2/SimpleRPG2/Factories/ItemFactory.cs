@@ -83,7 +83,7 @@ namespace SimpleRPG2
         {
             //Get an existing ability, but make it free to use
             Ability grenadeAbility = AbilityHelper.getAbilityFree(AbilityFactory.getFireball());
-            UsableItem item = new UsableItem() { ID = 5, name = "Grenade", actionPoints = 5, activeEffects = null, itemAbility = grenadeAbility, passiveEffects = null, type = ItemType.Thrown, uses = 1 };
+            UsableItem item = new UsableItem() { ID = 30, name = "Grenade", actionPoints = 5, activeEffects = null, itemAbility = grenadeAbility, passiveEffects = null, type = ItemType.Thrown, uses = 1 };
 
             return item;
         }
