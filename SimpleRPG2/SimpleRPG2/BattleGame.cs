@@ -795,6 +795,8 @@ namespace SimpleRPG2
             return false;
         }
 
+
+        //DEPRECATED
         private void PlayerRangedAttackOld(GameCharacter player, Tile destination)
         {
             if (!CoreHelper.checkEffect(player.activeEffects, player.passiveEffects, StatType.Stun))
@@ -805,7 +807,6 @@ namespace SimpleRPG2
                 {
 
                     List<Tile> tileLOSList = board.getBoardLOS(ActiveTile, destination);
-
 
                     foreach (var t in tileLOSList)
                     {

@@ -45,21 +45,36 @@ namespace SimpleRPG2
 
         public static Weapon getBattleAxe(Random r)
         {
-            Weapon w = new Weapon() { ID = 4, name = "Battle Axe", minDamage = 10, maxDamage = 20, type = ItemType.Weapon, actionPoints = 5, activeEffects = null, passiveEffects = null };
+            ActiveEffect flame = new ActiveEffect() { name = "Flame", duration = 2, maxAmount = 10, minAmount = 5, statType = StatType.Damage };
+            Weapon w = new Weapon() { ID = 4, name = "Flaming Battle Axe", minDamage = 10, maxDamage = 20, type = ItemType.Weapon, actionPoints = 5, activeEffects = new List<ActiveEffect>() { flame}, passiveEffects = null };
             return w;
         }
 
         public static RangedWeapon getBow(Random r)
         {
-            RangedWeapon w = new RangedWeapon() { ID = 5, name = "Bow", minDamage = 5, maxDamage = 5, 
-                type = ItemType.Weapon, actionPoints = 5, activeEffects = null, passiveEffects = null,ammoType=AmmoType.Arrows,range=15,weaponType=WeaponType.TwoHandRanged };
+            ActiveEffect stun = new ActiveEffect() { name = "Stun", duration = 2, maxAmount = 0, minAmount = 0, statType = StatType.Stun };
+            RangedWeapon w = new RangedWeapon()
+            {
+                ID = 5,
+                name = "Stun Bow",
+                minDamage = 5,
+                maxDamage = 5,
+                type = ItemType.Weapon,
+                actionPoints = 5,
+                activeEffects = new List<ActiveEffect>() { stun},
+                passiveEffects = null,
+                ammoType = AmmoType.Arrows,
+                range = 15,
+                weaponType = WeaponType.TwoHandRanged
+            };
 
             return w;
         }
 
         public static Ammo getArrow(Random r)
         {
-            Ammo a = new Ammo() { ID = 20, activeEffects = null, ammoType = AmmoType.Arrows, bonusDamage = 5, name = "Arrow", passiveEffects = null, type = ItemType.Ammo };
+            ActiveEffect poison = new ActiveEffect() { name = "Weak Poison", duration = 3, maxAmount = 2, minAmount = 1, statType = StatType.Damage };
+            Ammo a = new Ammo() { ID = 20, activeEffects = new List<ActiveEffect>() { poison}, ammoType = AmmoType.Arrows, bonusDamage = 5, name = "Poison Arrow", passiveEffects = null, type = ItemType.Ammo };
             return a;
         }
 

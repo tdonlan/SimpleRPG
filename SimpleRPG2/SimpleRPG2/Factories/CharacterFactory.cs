@@ -10,7 +10,7 @@ namespace SimpleRPG2
     {
         public static GameCharacter getEnemy(Random r)
         {
-            GameCharacter retval = new GameCharacter() {name="Goblin",displayChar='G',type=CharacterType.Enemy, ac = 10, attack = 5, totalHP = 10, hp = 10, ap=10, totalAP=10 };
+            GameCharacter retval = new GameCharacter() {name="Goblin",displayChar='G',type=CharacterType.Enemy, ac = 10, attack = 5, totalHP = 50, hp = 50, ap=10, totalAP=10 };
             retval.weapon = ItemFactory.getLongsword(r);
             return retval;
         }

@@ -8,20 +8,16 @@ namespace SimpleRPG2
 {
     public class CombatHelper
     {
-        public static void Attack(GameCharacter attacker, GameCharacter defender, BattleGame game)
+        public static bool Attack(GameCharacter attacker, GameCharacter defender, BattleGame game)
         {
-
             if(game.r.Next(20) + attacker.attack > defender.ac)
             {
-
-                int dmg = game.r.Next(attacker.weapon.minDamage, attacker.weapon.maxDamage);
-                defender.Damage(dmg,game);
-               
-                game.battleLog.AddEntry(string.Format("{0} hit {1} for {2} damage.", attacker.name, defender.name, dmg));
+                return Hit(attacker, defender, game,null);
             }
             else
             {
                 game.battleLog.AddEntry(string.Format("{0} missed {1}.", attacker.name, defender.name));
+                return false;
             }
         }
 
@@ -57,10 +53,7 @@ namespace SimpleRPG2
                                 //check for hit
                                 if (game.r.Next(20) + attacker.attack > defender.ac)
                                 {
-                                    int dmg = game.r.Next(attacker.weapon.minDamage, attacker.weapon.maxDamage) + a.bonusDamage;
-                                    defender.Damage(dmg, game);
-
-                                    game.battleLog.AddEntry(string.Format("{0} hit {1} for {2} damage.", attacker.name, defender.name, dmg));
+                                    retval = Hit(attacker, defender, game,a);
 
                                     //remove ammo
                                     attacker.inventory.Remove(a);
@@ -95,6 +88,41 @@ namespace SimpleRPG2
             }
            
             return retval;
+        }
+
+        private static bool Hit(GameCharacter attacker, GameCharacter defender, BattleGame game, Ammo ammo)
+        {
+            int bonusDamage = 0;
+            if(ammo != null)
+            {
+                bonusDamage = ammo.bonusDamage;
+
+                if (ammo.activeEffects != null)
+                {
+                    foreach (var ae in ammo.activeEffects)
+                    {
+                        defender.AddActiveEffect(AbilityHelper.cloneActiveEffect(ae), game);
+                    }
+                }
+            }
+
+            int dmg = game.r.Next(attacker.weapon.minDamage, attacker.weapon.maxDamage) + bonusDamage;
+
+            defender.Damage(dmg, game);
+
+            game.battleLog.AddEntry(string.Format("{0} hit {1} for {2} damage.", attacker.name, defender.name, dmg));
+
+            if(attacker.weapon.activeEffects != null)
+            {
+                foreach(var ae in attacker.weapon.activeEffects)
+                {
+                    defender.AddActiveEffect(AbilityHelper.cloneActiveEffect(ae), game);
+                }
+            }
+
+            
+
+            return true;
         }
     }
 }
