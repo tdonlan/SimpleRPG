@@ -9,6 +9,33 @@ namespace SimpleRPG2
     public class AI
     {
 
+        public static List<BattleAction> attackNearestPlayer(GameCharacter enemy, BattleGame game)
+        {
+            List<BattleAction> actionList = new List<BattleAction>();
+
+            var attackTarget = findNearestPlayer(enemy, game.board,game.characterList);
+
+            var targetTile = game.board.getTileFromLocation(attackTarget.x, attackTarget.y);
+
+            //path find to target
+            List<Point> pointList = PathFind.Pathfind(game.board, enemy.x, enemy.y, targetTile.x, targetTile.y);
+            pointList.RemoveAt(0); //remove the character from pathfind.
+            pointList.RemoveAt(pointList.Count - 1); //remove the target from pathfind.
+
+            foreach (var p in pointList)
+            {
+                actionList.Add(new BattleAction() { character = enemy, actionType = BattleActionType.Move, targetTile = game.board.getTileFromPoint(p) });
+            }
+
+            //attack action
+            actionList.Add(new BattleAction() { character = enemy, targetTile = targetTile, actionType = BattleActionType.Attack });
+
+            return actionList;
+        }
+
+
+        //DEPRECATED
+        /*
         public static void attackNearestPlayer(GameCharacter enemy, BattleGame game)
         {
             
@@ -24,7 +51,9 @@ namespace SimpleRPG2
             }
             
         }
+         * */
 
+        //DEPRECATED
         private static void attackPlayer(GameCharacter enemy, GameCharacter player, BattleGame game)
         {
             if(enemy.SpendAP(enemy.weapon.actionPoints))

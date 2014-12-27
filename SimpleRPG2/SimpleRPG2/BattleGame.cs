@@ -87,6 +87,7 @@ namespace SimpleRPG2
         //Increment Initiative
         private void NextTurn()
         {
+            actionQueue.Clear();
             ActiveCharacter.ResetAP();
             TurnCounter++;
             NewTurn = true;
@@ -118,54 +119,8 @@ namespace SimpleRPG2
             }
         }
 
-        private void RunBattleOld()
-        {
-            BattleStatusType battleStatus = getBattleStatus();
-            while (battleStatus == BattleStatusType.Running)
-            {
 
-                if (NewTurn)
-                {
-                    NewTurn = false;
-                    ActiveCharacter.RunActiveEffects(this);
-                }
-
-                DisplayScreen();
-
-                if (ActiveCharacter.hp > 0)
-                {
-                 
-                    if (ActiveCharacter.type == CharacterType.Player)
-                    {
-                        RunTurnPlayer();
-                    }
-                    else
-                    {
-                        RunEnemyTurn();
-                        System.Threading.Thread.Sleep(1000);
-                    }
-                }
-                else
-                {
-                    CharacterKill(ActiveCharacter);
-                    NextTurnActiveDied();
-                }
-
-                battleStatus = getBattleStatus();
-            }
-
-            if (battleStatus == BattleStatusType.PlayersDead)
-            {
-                LoseBattle();
-            }
-            else if (battleStatus == BattleStatusType.EnemiesDead)
-            {
-                WinBattle();
-            }
-
-        }
-
-        //Testing player movement
+      
         private void RunBattle()
         {
             BattleStatusType battleStatus = getBattleStatus();
@@ -183,25 +138,31 @@ namespace SimpleRPG2
                 if (ActiveCharacter.hp > 0)
                 {
 
-                    if (actionQueue.Count > 0)
-                    {
-                        RunActionQueue();
-                    }
-                    else
-                    {
                         if (ActiveCharacter.type == CharacterType.Player)
                         {
-                            actionQueue = DisplayMainMenuGetActionList();
-                            //RunTurnPlayer();
+                            if (actionQueue.Count > 0)
+                            {
+                                RunActionQueue();
+                            }
+                            else
+                            {
+                                 actionQueue = DisplayMainMenuGetActionList();
+                            }
                         }
                         else
                         {
-                            RunEnemyTurn();
-                            System.Threading.Thread.Sleep(1000);
+                            if (actionQueue.Count > 0)
+                            {
+                                if (!RunActionQueue())
+                                {
+                                    NextTurn();
+                                }
+                            }
+                            else
+                            {
+                                actionQueue = getEnemyActionList();
+                            }
                         }
-                    }
-
-                    
                 }
                 else
                 {
@@ -224,7 +185,8 @@ namespace SimpleRPG2
         }
 
         //while we have actions in the queue, execute, otherwise return
-        private void RunActionQueue()
+        //return false if we fail the action queue, otherwise false
+        private bool RunActionQueue()
         {
             while(actionQueue.Count > 0)
             {
@@ -240,21 +202,21 @@ namespace SimpleRPG2
                         if(!PlayerMove(action.character,action.targetTile.x,action.targetTile.y))
                         {
                             actionQueue.Clear();
-                            return;
+                            return false;
                         }
                         break; 
                     case BattleActionType.Attack:
                         if(!PlayerAttack(action.character,action.targetTile))
                         {
                             actionQueue.Clear();
-                            return;
+                            return false;
                         }
                         break;
                     case BattleActionType.RangedAttack:
                         if (!PlayerRangedAttack(action.character, action.targetTile))
                         {
                             actionQueue.Clear();
-                            return;
+                            return false;
                         }
                         break;
                     case BattleActionType.UseAbility:
@@ -262,23 +224,22 @@ namespace SimpleRPG2
                        if(!UseAbility(action.character,action.ability,action.targetTile))
                        {
                            actionQueue.Clear();
-                           return;
+                           return false;
                        }
                         break;
                     case BattleActionType.UseItem:
                         if(!UseItem(action.character,action.item,action.targetTile))
                         {
                             actionQueue.Clear();
-                            return;
+                            return false;
                         }
                         break;
                     case BattleActionType.EndTurn:
                         NextTurn();
-                        return;
+                        return true;
                         
                     default:
-                        return;
-                
+                        return false;
                 }
 
                 System.Threading.Thread.Sleep(500);
@@ -287,10 +248,9 @@ namespace SimpleRPG2
 
                 System.Threading.Thread.Sleep(500);
 
-
             }
 
-            return;
+            return true;
         }
 
         private void DisplayScreen()
@@ -1325,7 +1285,20 @@ namespace SimpleRPG2
             return false;
         }
 
-   
+        private List<BattleAction> getEnemyActionList()
+        {
+            List<BattleAction> actionList = new List<BattleAction>();
+            if (!CoreHelper.checkEffect(ActiveCharacter.activeEffects, ActiveCharacter.passiveEffects, StatType.Stun))
+            {
+
+                actionList = AI.attackNearestPlayer(ActiveCharacter, this);
+
+            }
+
+            return actionList;
+        }
+
+
         //enemy AI
         private void RunEnemyTurn()
         {
