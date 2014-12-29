@@ -131,6 +131,23 @@ namespace SimpleRPG2
         UseAbility,
         EndTurn
     }
+
+    public enum EnemyType
+    {
+        Warrior,
+        Mage,
+        Priest,
+    }
+
+    public enum AIActionType
+    {
+        Attack,
+        RangedAttack,
+        Heal,
+        Buff,
+        Nuke,
+        Flee
+    }
         
 
 }

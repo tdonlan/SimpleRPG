@@ -304,6 +304,40 @@ namespace SimpleRPG2
             return tileList;
         }
 
+        public bool checkLOS(Tile origin, Tile destination)
+        {
+            List<Tile> tileLOSList = getBoardLOS(origin, destination);
+            if (tileLOSList[tileLOSList.Count - 1] == destination)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        //Return a path to the tile that has LOS with the destination
+        public List<Point> getPathToLOS(Tile origin, Tile destination)
+        {
+            List<Point> pathList = PathFind.Pathfind(this, origin.x, origin.y, destination.x, destination.y);
+            pathList.RemoveAt(0);
+            pathList.RemoveAt(pathList.Count-1);
+
+            int counter=0;
+            foreach(var p in pathList)
+            {
+                if(checkLOS(getTileFromPoint(p),destination))
+                {
+                    break;
+                }
+                counter++;
+            }
+
+            pathList.RemoveRange(0, counter);
+            return pathList;
+        }
+
         public string ToStringTemp()
         {
             string retval = "RPG Board: \n";

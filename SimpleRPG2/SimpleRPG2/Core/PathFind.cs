@@ -132,5 +132,9 @@ namespace SimpleRPG2
         {
             return Math.Min(val1, Math.Min(val2, val3));
         }
+   
+    
+    
+    
     }
 }

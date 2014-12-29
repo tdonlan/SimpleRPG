@@ -48,11 +48,14 @@
     <Compile Include="BattleScreen.cs" />
     <Compile Include="Core\AbilityHelper.cs" />
     <Compile Include="Core\AI.cs" />
+    <Compile Include="Core\AIAction.cs" />
+    <Compile Include="Core\AIActor.cs" />
     <Compile Include="Core\BattleLog.cs" />
     <Compile Include="Core\ItemHelper.cs" />
     <Compile Include="Core\PathFind.cs" />
     <Compile Include="Core\PlotLine.cs" />
     <Compile Include="Factories\AbilityFactory.cs" />
+    <Compile Include="Factories\AIFactory.cs" />
     <Compile Include="Factories\BoardFactory.cs" />
     <Compile Include="GameObjects\Ability.cs" />
     <Compile Include="GameObjects\BattleAction.cs" />

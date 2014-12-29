@@ -36,5 +36,91 @@ namespace SimpleRPG2
             }
             return false;
         }
+
+        //Better abstraction for these?
+
+        public bool canUseSelf()
+        {
+            switch(targetType)
+            {
+                case AbilityTargetType.Self:
+                    return true;
+                case AbilityTargetType.SingleFriend:
+                    return true;
+                case AbilityTargetType.SingleFoe:
+                    return false;
+                case AbilityTargetType.AllFriends:
+                    return true;
+                case AbilityTargetType.AllFoes:
+
+                    return false;
+                case AbilityTargetType.PointEmpty:
+                    return false;
+                case AbilityTargetType.PointTarget:
+                    return true;
+                case AbilityTargetType.LOSEmpty:
+                    return false;
+                case AbilityTargetType.LOSTarget:
+                    return true;// ??
+                default:
+                    return false;
+            }
+        }
+
+        public bool canUseAlly()
+        {
+            switch (targetType)
+            {
+                case AbilityTargetType.Self:
+                    return false;
+                case AbilityTargetType.SingleFriend:
+                    return true;
+                case AbilityTargetType.SingleFoe:
+                    return false;
+                case AbilityTargetType.AllFriends:
+                    return true;
+                case AbilityTargetType.AllFoes:
+
+                    return false;
+                case AbilityTargetType.PointEmpty:
+                    return false;
+                case AbilityTargetType.PointTarget:
+                    return true;
+                case AbilityTargetType.LOSEmpty:
+                    return false;
+                case AbilityTargetType.LOSTarget:
+                    return true;// ??
+                default:
+                    return false;
+            }
+        }
+
+        public bool canUseEnemy()
+        {
+            switch (targetType)
+            {
+                case AbilityTargetType.Self:
+                    return false;
+                case AbilityTargetType.SingleFriend:
+                    return false;
+                case AbilityTargetType.SingleFoe:
+                    return true;
+                case AbilityTargetType.AllFriends:
+                    return false;
+                case AbilityTargetType.AllFoes:
+
+                    return true;
+                case AbilityTargetType.PointEmpty:
+                    return false;
+                case AbilityTargetType.PointTarget:
+                    return true;
+                case AbilityTargetType.LOSEmpty:
+                    return false;
+                case AbilityTargetType.LOSTarget:
+                    return true;// ??
+                default:
+                    return false;
+            }
+        }
     }
 }
