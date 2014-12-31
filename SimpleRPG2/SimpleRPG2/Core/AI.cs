@@ -9,6 +9,23 @@ namespace SimpleRPG2
     public class AI
     {
 
+
+
+        public static List<BattleAction> getBattleActionList(EnemyCharacter character, BattleGame game)
+        {
+            List<BattleAction> retvalList = character.aiActor.getBattleActionList(game);
+
+            retvalList.Add(getEndTurnAction(character));
+
+            return retvalList;
+        }
+
+        private static BattleAction getEndTurnAction(EnemyCharacter character)
+        {
+            return new BattleAction() { actionType = BattleActionType.EndTurn, character = character, targetCharacter = null, targetTile = null };
+            
+        }
+
         public static List<BattleAction> attackNearestPlayer(GameCharacter enemy, BattleGame game)
         {
             List<BattleAction> actionList = new List<BattleAction>();

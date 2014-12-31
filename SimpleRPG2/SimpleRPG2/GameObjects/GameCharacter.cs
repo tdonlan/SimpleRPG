@@ -47,14 +47,15 @@ namespace SimpleRPG2
         public Weapon weapon { get; set; }
 
         public ItemSet Ammo { get; set; }
-     
+
 
         public List<ActiveEffect> activeEffects { get; set; }
         public List<PassiveEffect> passiveEffects { get; set; }
 
         public List<Ability> abilityList { get; set; }
 
-        public GameCharacter() {
+        public GameCharacter()
+        {
             inventory = new List<Item>();
             equippedArmor = new List<Armor>();
             activeEffects = new List<ActiveEffect>();
@@ -64,7 +65,7 @@ namespace SimpleRPG2
 
         public bool CheckAP(int ap)
         {
-            if(this.ap >= ap)
+            if (this.ap >= ap)
             {
                 return true;
             }
@@ -73,7 +74,7 @@ namespace SimpleRPG2
 
         public bool SpendAP(int ap)
         {
-            if(this.ap >= ap)
+            if (this.ap >= ap)
             {
                 this.ap -= ap;
                 return true;
@@ -88,10 +89,10 @@ namespace SimpleRPG2
 
         public void AddActiveEffect(ActiveEffect a, BattleGame game)
         {
-            ActivateEffect(a,game);
+            ActivateEffect(a, game);
 
             a.duration--;
-            if(a.duration > 0)
+            if (a.duration > 0)
             {
                 activeEffects.Add(a);
             }
@@ -109,7 +110,7 @@ namespace SimpleRPG2
 
         public void RemoveTopActiveEffects(int num)
         {
-            if(num > activeEffects.Count)
+            if (num > activeEffects.Count)
             {
                 num = activeEffects.Count;
             }
@@ -119,12 +120,12 @@ namespace SimpleRPG2
         //Occurs once per turn
         public void RunActiveEffects(BattleGame game)
         {
-            for (int i = activeEffects.Count - 1; i >= 0;i-- )
+            for (int i = activeEffects.Count - 1; i >= 0; i--)
             {
-                ActivateEffect(activeEffects[i],game);
+                ActivateEffect(activeEffects[i], game);
 
                 activeEffects[i].duration--;
-                if(activeEffects[i].duration <=0)
+                if (activeEffects[i].duration <= 0)
                 {
                     activeEffects.RemoveAt(i);
                 }
@@ -133,10 +134,10 @@ namespace SimpleRPG2
 
         private void ActivateEffect(ActiveEffect effect, BattleGame game)
         {
-            switch(effect.statType)
+            switch (effect.statType)
             {
                 case StatType.Damage:
-                    this.Damage(game.r.Next(effect.minAmount, effect.maxAmount),game);
+                    this.Damage(game.r.Next(effect.minAmount, effect.maxAmount), game);
                     break;
                 case StatType.Heal:
                     this.Heal(game.r.Next(effect.minAmount, effect.maxAmount), game);
@@ -155,18 +156,18 @@ namespace SimpleRPG2
             game.battleLog.AddEntry(string.Format("{0} was hurt for {1}", this.name, amount));
 
             this.hp -= amount;
-            if(this.hp <= 0)
+            if (this.hp <= 0)
             {
                 Kill(game);
             }
 
-         
+
         }
 
         public void Heal(int amount, BattleGame game)
         {
             this.hp += amount;
-            if(this.hp > this.totalHP)
+            if (this.hp > this.totalHP)
             {
                 this.hp = this.totalHP;
             }
@@ -182,7 +183,7 @@ namespace SimpleRPG2
 
         public void EquipWeapon(Weapon w)
         {
-            if(inventory.Contains(w))
+            if (inventory.Contains(w))
             {
                 inventory.Remove(w);
                 this.weapon = w;
@@ -199,14 +200,14 @@ namespace SimpleRPG2
 
         public void RemoveWeapon(Weapon w)
         {
-            if(w != null)
+            if (w != null)
             {
-                if(weapon == w)
+                if (weapon == w)
                 {
                     weapon = null;
 
                     inventory.Add(w);
-                 
+
                     if (w.passiveEffects != null)
                     {
                         foreach (var pe in w.passiveEffects)
@@ -221,20 +222,20 @@ namespace SimpleRPG2
         public void EquipArmor(Armor a)
         {
 
-            if(inventory.Contains(a))
+            if (inventory.Contains(a))
             {
-                if(equippedArmor.FindAll(x =>x.armorType == a.armorType).Count == 0)
+                if (equippedArmor.FindAll(x => x.armorType == a.armorType).Count == 0)
                 {
                     inventory.Remove(a);
                     equippedArmor.Add(a);
-                    if(a.passiveEffects != null)
+                    if (a.passiveEffects != null)
                     {
                         foreach (var pe in a.passiveEffects)
                         {
                             AddPassiveEffect(pe);
                         }
                     }
-                    
+
                 }
             }
         }
@@ -245,7 +246,7 @@ namespace SimpleRPG2
                          where data.armorType == type
                          select data).FirstOrDefault();
 
-            if(armor != null)
+            if (armor != null)
             {
                 RemoveArmor(armor);
             }
@@ -263,7 +264,7 @@ namespace SimpleRPG2
 
         public void RemoveArmor(Armor a)
         {
-            if(equippedArmor.Contains(a))
+            if (equippedArmor.Contains(a))
             {
                 equippedArmor.Remove(a);
                 inventory.Add(a);
@@ -274,13 +275,13 @@ namespace SimpleRPG2
                         RemovePassiveEffect(pe);
                     }
                 }
-               
+
             }
         }
 
         public void EquipAmmo(Ammo a)
         {
-            if(inventory.Contains(a))
+            if (inventory.Contains(a))
             {
                 this.Ammo = ItemHelper.getItemSet(inventory, a);
             }
@@ -298,16 +299,16 @@ namespace SimpleRPG2
             retval += string.Format("AC: {0} HP: {1}/{2} Atk: {3} AP: {4}/{5}\n", ac, hp, totalHP, attack, ap, totalAP);
 
             retval += weapon.ToString() + "\n";
-            foreach(var e in equippedArmor)
+            foreach (var e in equippedArmor)
             {
                 retval += e.ToString() + "\n";
             }
 
-            foreach(var ae in activeEffects)
+            foreach (var ae in activeEffects)
             {
                 retval += ae.ToString() + "\n";
             }
-            foreach(var pe in passiveEffects)
+            foreach (var pe in passiveEffects)
             {
                 retval += pe.ToString() + "\n";
             }
@@ -315,4 +316,17 @@ namespace SimpleRPG2
             return retval;
         }
     }
+
+
+    public class EnemyCharacter : GameCharacter
+    {
+        public EnemyType enemyType { get; set; }
+        public AIActor aiActor { get; set; }
+
+        public EnemyCharacter()
+        {
+            aiActor = new AIActor(this, enemyType);
+        }
+    }
+
 }

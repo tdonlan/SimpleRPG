@@ -57,9 +57,9 @@ namespace SimpleRPG2
         {
             characterList = new List<GameCharacter>();
             characterList.Add(CharacterFactory.getPlayerCharacter(r));
-            characterList.Add(CharacterFactory.getEnemy(r));
-            characterList.Add(CharacterFactory.getEnemy(r));
-            characterList.Add(CharacterFactory.getEnemy(r));
+            characterList.Add(CharacterFactory.getGoblin(r));
+            characterList.Add(CharacterFactory.getGoblin(r));
+            characterList.Add(CharacterFactory.getGoblin(r));
 
             battleLog.AddEntry("Characters Initialized");
         }
@@ -1001,8 +1001,8 @@ namespace SimpleRPG2
             List<BattleAction> actionList = new List<BattleAction>();
             if (!CoreHelper.checkEffect(ActiveCharacter.activeEffects, ActiveCharacter.passiveEffects, StatType.Stun))
             {
-
-                actionList = AI.attackNearestPlayer(ActiveCharacter, this);
+                actionList = AI.getBattleActionList((EnemyCharacter)ActiveCharacter, this);
+                //actionList = AI.attackNearestPlayer(ActiveCharacter, this);
 
             }
 

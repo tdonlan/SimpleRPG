@@ -10,8 +10,8 @@ namespace SimpleRPG2
     {
         public GameCharacter character {get;set;}
         public EnemyType enemyType { get; set; }
-        public Dictionary<AIActionType, int> actionWeight { get; set; }
-        public List<AIAction> AIActionList { get; set; }
+        public Dictionary<AIActionType, int> actionWeightDictionary { get; set; } //static for life of character
+        public List<AIAction> AIActionList { get; set; } //updates every turn
 
         public AIActor(GameCharacter character, EnemyType type)
         {
@@ -19,33 +19,71 @@ namespace SimpleRPG2
             this.enemyType = type;
 
             InitActionWeight();
-            InitActionCost();
+
         }
 
         private void InitActionWeight()
         {
-            actionWeight = AIFactory.getEnemyActionDictionary(enemyType);
+            actionWeightDictionary = AIFactory.getEnemyActionDictionary(enemyType);
         }
 
-        private void InitActionCost()
+
+        public List<BattleAction> getBattleActionList(BattleGame game)
         {
-            AIActionList = new List<AIAction>();
-            
-        }
+            List<BattleAction> retval = new List<BattleAction>();
 
+            //reset the AIActionList
+            AIActionList = new List<AIAction>();
+            //update the weight and cost lists
+            foreach(var type in actionWeightDictionary.Keys)
+            {
+                AIActionList.AddRange(getAIActions(game, type));
+            }
+
+            if (AIActionList.Count > 0)
+            {
+                AIActionList.Sort((x1, x2) => (x1.cost * (100 - x1.weight)).CompareTo(x2.cost * (100 - x2.weight)));
+
+                //get the top weighted action
+                retval.AddRange(AIActionList[0].battleActionList);
+            }
+
+            return retval;
+       
+        }
 
         private List<AIAction> getAIActions(BattleGame game, AIActionType type)
         {
-            List<AIAction> AIActionList = new List<AIAction>();
+            List<AIAction> retvalList = new List<AIAction>();
             switch(type)
             {
                 case AIActionType.Attack:
-                    AIActionList.AddRange(getAIAttackActions(game));
+                    retvalList.AddRange(getAIAttackActions(game));
+                    break;
+                case AIActionType.RangedAttack:
+                    retvalList.AddRange(getAIRangedAttackActions(game));
+                    break;
+                case AIActionType.Heal:
+                    retvalList.AddRange(getAIHealActions(game));
+                    break;
+                default:
                     break;
             }
-            return AIActionList;
+            return retvalList;
         }
 
+        #region WeightHeuristics
+
+        //function of current health + default heal weight
+        private int getAIHealWeight(BattleGame game)
+        {
+            int curWeight = 100 - ((character.hp / character.totalHP) * 100);
+            return (int)Math.Round((actionWeightDictionary[AIActionType.Heal] + (float)curWeight) / 2);
+        }
+
+        #endregion
+
+        #region CostHeuristics
 
         //if we have a melee weapon, calculate nearest enemy + weapon ap
         private List<AIAction> getAIAttackActions(BattleGame game)
@@ -139,6 +177,22 @@ namespace SimpleRPG2
                 }
             }
 
+            var usableItems = from data in character.inventory
+                              where data is UsableItem
+                              select data;
+
+            foreach (var i in usableItems.ToList())
+            {
+
+                UsableItem tempItem = (UsableItem)i;
+
+                if(i.activeEffects.Select(x=>x.statType == StatType.Heal) != null)
+                {
+                    List<BattleAction> battleActionList = new List<BattleAction>() { new BattleAction() { item=tempItem, character = character, targetCharacter = character, targetTile = targetTile, actionType = BattleActionType.UseItem} };
+                    aiActionList.Add(new AIAction() { actionType = AIActionType.Heal, cost = tempItem.actionPoints, battleActionList = battleActionList });
+                }
+            }
+
             return AIActionList;
         }
 
@@ -159,6 +213,9 @@ namespace SimpleRPG2
             List<AIAction> aiActionList = new List<AIAction>();
             return AIActionList;
         }
+
+
+        #endregion
 
     }
 }

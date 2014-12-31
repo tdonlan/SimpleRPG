@@ -11,6 +11,7 @@ namespace SimpleRPG2
         public AIActionType actionType { get; set; }
         public List<BattleAction> battleActionList { get; set; }
         public int cost { get; set; }
+        public int weight { get; set; }
 
     }
 }
